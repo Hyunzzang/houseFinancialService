@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: task3
+    profiles: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./home_fina_db;AUTO_SERVER=TRUE
+    username: home
+    password: 123456
+  h2:
+    console:
+      enabled: true
+      path: /house_fina_db
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.springframework: info
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG

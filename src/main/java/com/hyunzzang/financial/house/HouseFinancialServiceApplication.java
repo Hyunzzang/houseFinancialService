@@ -1,13 +1,13 @@
-package com.hyunzzang.financial.home;
+package com.hyunzzang.financial.house;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HomeFinancialServiceApplication {
+public class HouseFinancialServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HomeFinancialServiceApplication.class, args);
+		SpringApplication.run(HouseFinancialServiceApplication.class, args);
 	}
 
 }

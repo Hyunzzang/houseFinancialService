@@ -1,10 +1,10 @@
-package com.hyunzzang.financial.home;
+package com.hyunzzang.financial.house;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HomeFinancialServiceApplicationTests {
+class HouseFinancialServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
