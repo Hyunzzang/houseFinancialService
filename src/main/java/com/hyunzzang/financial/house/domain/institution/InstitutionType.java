@@ -35,6 +35,7 @@ public enum InstitutionType {
             }
         }
 
+        // todo 예외처리를 하자.
         return NONE;
     }
 }

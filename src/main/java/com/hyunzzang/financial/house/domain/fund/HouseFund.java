@@ -1,5 +1,6 @@
 package com.hyunzzang.financial.house.domain.fund;
 
+import com.hyunzzang.financial.house.common.converter.YearAttributeConverter;
 import com.hyunzzang.financial.house.domain.institution.Institution;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.time.Year;
         name="house_fund",
         uniqueConstraints={
                 @UniqueConstraint(
-                        columnNames={"year","month","institution_id"}
+                        columnNames={"year","month","institution_type"}
                 )
         }
 )
@@ -28,14 +29,16 @@ public class HouseFund {
     @Column
     private Long id;
 
+    @Convert(converter = YearAttributeConverter.class)
     @Column(name = "year")
     private Year year;
 
-    @Column(name = "month")
+    @Column(name = "month", columnDefinition = "smallint")
+    @Enumerated
     private Month month;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "institution_id")
+    @JoinColumn(name = "institution_type")
     private Institution institution;
 
     @Column

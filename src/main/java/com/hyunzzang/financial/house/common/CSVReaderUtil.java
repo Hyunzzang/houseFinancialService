@@ -39,7 +39,6 @@ public class CSVReaderUtil {
     private static List<String[]> readAll(Reader reader) throws IOException {
         CSVParser parser = new CSVParserBuilder()
                 .withSeparator(',')
-                .withIgnoreQuotations(true)
                 .build();
 
         CSVReader csvReader = new CSVReaderBuilder(reader)

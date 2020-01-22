@@ -17,7 +17,7 @@ import javax.persistence.Table;
 public class Institution {
     // todo type 소스상에 정의 해야 할까?
     @Id
-    @Column(name = "institution_id", nullable = false)
+    @Column(name = "type", nullable = false)
     private String type;
 
     @Column(name = "name", nullable = false)

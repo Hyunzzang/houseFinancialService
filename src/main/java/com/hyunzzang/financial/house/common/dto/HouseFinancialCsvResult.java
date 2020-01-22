@@ -1,4 +1,4 @@
-package com.hyunzzang.financial.house.application.dto;
+package com.hyunzzang.financial.house.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

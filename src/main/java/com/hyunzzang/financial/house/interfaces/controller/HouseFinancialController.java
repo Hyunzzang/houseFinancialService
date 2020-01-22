@@ -1,7 +1,7 @@
 package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.application.HouseFinancialCsvService;
-import com.hyunzzang.financial.house.application.dto.HouseFinancialCsvResult;
+import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/finance/home")
-public class HomeFinancialController {
+@RequestMapping(value = "/finance/hose")
+public class HouseFinancialController {
 
     private HouseFinancialCsvService houseFinancialCsvService;
 
-    public HomeFinancialController(HouseFinancialCsvService houseFinancialCsvService) {
+    public HouseFinancialController(HouseFinancialCsvService houseFinancialCsvService) {
         this.houseFinancialCsvService = houseFinancialCsvService;
     }
 
@@ -25,6 +25,6 @@ public class HomeFinancialController {
     public ResponseEntity<HouseFinancialCsvResult> saveHomeFinancialFromCsv(MultipartFile file) {
         log.info(":: saveHomeFinancialFromCsv ::");
 
-        return new ResponseEntity(houseFinancialCsvService.addHouseFinancial(file), HttpStatus.OK);
+        return ResponseEntity.ok(houseFinancialCsvService.addHouseFinancial(file));
     }
 }

@@ -1,8 +1,10 @@
 package com.hyunzzang.financial.house.application;
 
-import com.hyunzzang.financial.house.application.dto.HouseFinancialCsvResult;
+import com.hyunzzang.financial.house.common.InstitutionUtil;
+import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
 import com.hyunzzang.financial.house.common.CSVReaderUtil;
 import com.hyunzzang.financial.house.domain.fund.HouseFund;
+import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import com.hyunzzang.financial.house.domain.institution.Institution;
 import com.hyunzzang.financial.house.domain.institution.InstitutionService;
 import com.hyunzzang.financial.house.domain.institution.InstitutionType;
@@ -26,10 +28,12 @@ import java.util.Map;
 public class HouseFinancialCsvService {
 
     private InstitutionService institutionService;
+    private HouseFundService houseFundService;
 
     @Autowired
-    public HouseFinancialCsvService(InstitutionService institutionService) {
+    public HouseFinancialCsvService(InstitutionService institutionService, HouseFundService houseFundService) {
         this.institutionService = institutionService;
+        this.houseFundService = houseFundService;
     }
 
     @Transactional
@@ -40,6 +44,7 @@ public class HouseFinancialCsvService {
         Map<Integer, Institution> institutionMap = makeInstitutionMap(rowList.get(0));
         institutionService.addInstitutions(institutionMap.values());
         List<HouseFund> houseFundList = makeHouseFundToList(rowList, institutionMap);
+        houseFundService.addAllHouseFund(houseFundList);
 
         return new HouseFinancialCsvResult(institutionMap.size(), houseFundList.size());
     }
@@ -47,7 +52,13 @@ public class HouseFinancialCsvService {
     private Map<Integer, Institution> makeInstitutionMap(String[] row) {
         Map<Integer, Institution> resMap = new HashMap<>();
         for (int i = 2; i < row.length; i++) {
-            InstitutionType institutionType = InstitutionType.getInstitutionTypeByName(row[i]);
+            String cell = row[i];
+            if (StringUtils.isEmpty(cell)) {
+                continue;
+            }
+
+            InstitutionType institutionType = InstitutionType
+                    .getInstitutionTypeByName(InstitutionUtil.exclusionName(cell));
             // todo institutionType 타입이 NONE 이면 예외처리를 하자.
 
             resMap.put(i, Institution.ByInstitutionTypeBuilder().institutionType(institutionType).build());
@@ -69,18 +80,23 @@ public class HouseFinancialCsvService {
         log.debug("row - {} - data : {}", rowNo, StringUtils.join(row, ", "));
 
         List<HouseFund> houseFundList = new ArrayList<>();
-        Assert.isTrue(NumberUtils.isCreatable(row[0]), "1번째 컬럼 숫자형이 아닙니다.");
-        Assert.isTrue(NumberUtils.isCreatable(row[1]), "2번째 컬럼 숫자형이 아닙니다.");
+        Assert.isTrue(NumberUtils.isCreatable(row[0]), rowNo + "라인-" + "1번째 컬럼 숫자형이 아닙니다.");
+        Assert.isTrue(NumberUtils.isCreatable(row[1]), rowNo + "라인-" + "2번째 컬럼 숫자형이 아닙니다.");
         int year = NumberUtils.toInt(row[0]);
         int month = NumberUtils.toInt(row[1]);
 
         for (int i = 2; i < row.length; i++) {
-            Assert.isTrue(NumberUtils.isCreatable(row[i]), i + "번째 컬럼 숫자형이 아닙니다.");
+            String cell = row[i].replace(",", "");
+            if (StringUtils.isEmpty(cell)) {
+                continue;
+            }
+
+            Assert.isTrue(NumberUtils.isCreatable(cell), rowNo + "라인-" + i + "번째 컬럼 숫자형이 아닙니다.");
             houseFundList.add(HouseFund.builder()
                     .year(year)
                     .month(month)
                     .institution(resMap.get(i))
-                    .amount(NumberUtils.toLong(row[i]))
+                    .amount(NumberUtils.toLong(cell))
                     .build());
         }
 

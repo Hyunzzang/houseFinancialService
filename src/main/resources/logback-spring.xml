@@ -6,27 +6,23 @@
         </layout>
     </appender>
 
-    <springProfile name="local">
-        <!-- FILE Appender -->
-        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/homeFinancialService.log</file>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>logs/homeFinancialService_%d{yyyyMMdd}.log</fileNamePattern>
-                <maxHistory>30</maxHistory>
-            </rollingPolicy>
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta(%-4relative) --- [ %thread{10} ] %cyan(%logger{20}) : %msg%n</pattern>
-            </encoder>
-        </appender>
-    </springProfile>
+    <!-- FILE Appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/homeFinancialService.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/homeFinancialService_%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta(%-4relative) --- [ %thread{10} ] %cyan(%logger{20}) : %msg%n</pattern>
+        </encoder>
+    </appender>
 
-    <logger name="com.hyunzzang.financial.house" level="debug"/>
+    <logger name="com.hyunzzang.financial" level="debug"/>
     <logger name="org" level="info"/>
 
-    <root>
-        <springProfile name="local">
-            <appender-ref ref="STDOUT"/>
-            <appender-ref ref="FILE"/>
-        </springProfile>
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
