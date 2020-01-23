@@ -1,17 +1,30 @@
 package com.hyunzzang.financial.house.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hyunzzang.financial.house.domain.fund.YearSumAmountResult;
 import lombok.Getter;
 
+import java.time.Year;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 public class YearTotalAmountResponse {
     private int year;
 
-    @JsonProperty("label")
+    @JsonProperty("total_amount")
     private long totalAmount;
 
-    @JsonProperty("label")
-    private Map<String, Long> detaailAmount;
+    @JsonProperty("detaail_amount")
+    private Map<String, Long> detaailAmount = new HashMap<>();
+
+
+    public YearTotalAmountResponse(Year year, List<YearSumAmountResult> yearSumAmountResultList) {
+        this.year = year.getValue();
+        for (YearSumAmountResult val: yearSumAmountResultList) {
+            totalAmount += val.getSumAmount();
+            detaailAmount.put(val.getInstitution().getName(), val.getSumAmount());
+        }
+    }
 }

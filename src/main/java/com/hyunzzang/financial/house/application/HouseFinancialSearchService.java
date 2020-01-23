@@ -10,8 +10,4 @@ import java.util.List;
 @Service
 public class HouseFinancialSearchService {
 
-    public List<YearTotalAmountResponse> getAllYearsAmount() {
-
-        return null;
-    }
 }

@@ -22,6 +22,10 @@ public class InstitutionController {
         this.institutionService = institutionService;
     }
 
+    /**
+     * 주택금융 공급 금융기관(은행) 목록을 출력하는 API
+     * @return
+     */
     @GetMapping("/list")
     public ResponseEntity<List<InstitutionResponse>> list() {
         return ResponseEntity.ok(institutionService.getAllInstitution());
