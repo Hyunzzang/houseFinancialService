@@ -16,8 +16,8 @@ public class YearTotalAmountResponse {
     @JsonProperty("total_amount")
     private long totalAmount;
 
-    @JsonProperty("detaail_amount")
-    private Map<String, Long> detaailAmount = new HashMap<>();
+    @JsonProperty("detail_amount")
+    private Map<String, Long> detailAmount = new HashMap<>();
 
 
     public YearTotalAmountResponse(Year year, List<YearSumAmountResult> yearSumAmountResultList) {
@@ -27,7 +27,7 @@ public class YearTotalAmountResponse {
                 // todo 예외 처리를 하자.
             }
             totalAmount += val.getSumAmount();
-            detaailAmount.put(val.getInstitution().getName(), val.getSumAmount());
+            detailAmount.put(val.getInstitution().getName(), val.getSumAmount());
         }
     }
 }

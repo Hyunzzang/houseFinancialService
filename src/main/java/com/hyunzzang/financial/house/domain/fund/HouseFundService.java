@@ -53,7 +53,7 @@ public class HouseFundService {
 
     private Map<Year, List<YearSumAmountResult>> getYearGroupSumAmount() {
         // todo 데이터가 많을 경우를 대비 하자.
-        List<YearSumAmountResult> resList = houseFundRepository.getYearSumAmount();
+        List<YearSumAmountResult> resList = houseFundRepository.findYearSumAmount();
         return resList.stream()
                 .collect(groupingBy(YearSumAmountResult::getYear));
     }

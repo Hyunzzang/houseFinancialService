@@ -1,6 +1,7 @@
 package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.application.HouseFinancialCsvService;
+import com.hyunzzang.financial.house.common.dto.BankAverageResponse;
 import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
 import com.hyunzzang.financial.house.common.dto.YearMaxInstitutionResponse;
 import com.hyunzzang.financial.house.common.dto.YearTotalAmountResponse;
@@ -8,10 +9,7 @@ import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -62,5 +60,19 @@ public class HouseFinancialController {
         log.info(":: getMaxAdmountYear ::");
 
         return ResponseEntity.ok(houseFundService.getYearMaxAmountInstitution());
+    }
+
+    /**
+     * 외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력하는 API
+     *
+     * @param bankName
+     * @return
+     */
+    @GetMapping("/average/{bankName}")
+    public ResponseEntity<BankAverageResponse> getAverageForBank(@PathVariable("bankName") String bankName) {
+        log.info(":: getAverageForBank ::");
+        log.debug("bankName : {}", bankName);
+
+        return ResponseEntity.ok(null);
     }
 }
