@@ -22,7 +22,7 @@ public class InstitutionRepositoryTest {
     @Test
     public void whenFindByName_thenReturnInstitution() {
         Institution institution = Institution.ByInstitutionTypeBuilder()
-                .institutionType(InstitutionType.HANA_BANK)
+                .institutionCode(InstitutionCode.HANA_BANK)
                 .build();
 
         institutionRepository.save(institution);

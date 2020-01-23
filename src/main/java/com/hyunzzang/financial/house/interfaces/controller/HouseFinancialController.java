@@ -1,10 +1,8 @@
 package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.application.HouseFinancialCsvService;
-import com.hyunzzang.financial.house.common.dto.BankAverageResponse;
-import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
-import com.hyunzzang.financial.house.common.dto.YearMaxInstitutionResponse;
-import com.hyunzzang.financial.house.common.dto.YearTotalAmountResponse;
+import com.hyunzzang.financial.house.application.HouseFinancialSearchService;
+import com.hyunzzang.financial.house.common.dto.*;
 import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +19,15 @@ public class HouseFinancialController {
 
     private HouseFinancialCsvService houseFinancialCsvService;
     private HouseFundService houseFundService;
+    private HouseFinancialSearchService houseFinancialSearchService;
 
     @Autowired
-    public HouseFinancialController(HouseFinancialCsvService houseFinancialCsvService, HouseFundService houseFundService) {
+    public HouseFinancialController(HouseFinancialCsvService houseFinancialCsvService,
+                                    HouseFundService houseFundService,
+                                    HouseFinancialSearchService houseFinancialSearchService) {
         this.houseFinancialCsvService = houseFinancialCsvService;
         this.houseFundService = houseFundService;
+        this.houseFinancialSearchService = houseFinancialSearchService;
     }
 
     /**
@@ -73,6 +75,17 @@ public class HouseFinancialController {
         log.info(":: getAverageForBank ::");
         log.debug("bankName : {}", bankName);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(houseFinancialSearchService.getMaxMinAvgAmountForBank(bankName));
+    }
+
+    @GetMapping("/estimate/{bankName}/{month}")
+    public ResponseEntity<EstimateAmountResponse> getEstimateForBank(
+            @PathVariable("bankName") String bankName,
+            @PathVariable("month") int month) {
+        log.info(":: getEstimateForBank ::");
+        log.debug("bankName : {}", bankName);
+        log.debug("month : {}", month);
+
+        return ResponseEntity.ok(houseFinancialSearchService.getEstimateAmount(bankName, month));
     }
 }

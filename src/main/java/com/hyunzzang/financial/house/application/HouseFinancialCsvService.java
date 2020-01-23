@@ -7,7 +7,7 @@ import com.hyunzzang.financial.house.domain.fund.HouseFund;
 import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import com.hyunzzang.financial.house.domain.institution.Institution;
 import com.hyunzzang.financial.house.domain.institution.InstitutionService;
-import com.hyunzzang.financial.house.domain.institution.InstitutionType;
+import com.hyunzzang.financial.house.domain.institution.InstitutionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -57,11 +57,11 @@ public class HouseFinancialCsvService {
                 continue;
             }
 
-            InstitutionType institutionType = InstitutionType
+            InstitutionCode institutionCode = InstitutionCode
                     .getInstitutionTypeByName(InstitutionUtil.exclusionName(cell));
             // todo institutionType 타입이 NONE 이면 예외처리를 하자.
 
-            resMap.put(i, Institution.ByInstitutionTypeBuilder().institutionType(institutionType).build());
+            resMap.put(i, Institution.ByInstitutionTypeBuilder().institutionCode(institutionCode).build());
         }
 
         return resMap;

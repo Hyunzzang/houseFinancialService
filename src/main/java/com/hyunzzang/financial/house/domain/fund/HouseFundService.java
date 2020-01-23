@@ -2,10 +2,13 @@ package com.hyunzzang.financial.house.domain.fund;
 
 import com.hyunzzang.financial.house.common.dto.YearMaxInstitutionResponse;
 import com.hyunzzang.financial.house.common.dto.YearTotalAmountResponse;
+import com.hyunzzang.financial.house.domain.institution.Institution;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Month;
 import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,6 +52,28 @@ public class HouseFundService {
         }
 
         return resList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<YearAmountResult> getMaxMinAvgAmount(Institution institution) {
+        List<YearAmountResult> yearAmountResultList = houseFundRepository.findYearAvgAmountByInstitution(institution);
+        if (CollectionUtils.isEmpty(yearAmountResultList)) {
+            return Collections.EMPTY_LIST;
+        }
+
+        YearAmountResult maxAmount = yearAmountResultList.stream()
+                .max(Comparator.comparing(YearAmountResult::getAmount))
+                .orElseThrow(NoSuchElementException::new);
+        YearAmountResult minAmount = yearAmountResultList.stream()
+                .min(Comparator.comparing(YearAmountResult::getAmount))
+                .orElseThrow(NoSuchElementException::new);
+
+        return Arrays.asList(minAmount, maxAmount);
+    }
+
+    @Transactional(readOnly = true)
+    public List<HouseFund> getAmountList(Institution institution) {
+        return houseFundRepository.findAllByInstitutionOrderByYearAscMonthAsc(institution);
     }
 
     private Map<Year, List<YearSumAmountResult>> getYearGroupSumAmount() {

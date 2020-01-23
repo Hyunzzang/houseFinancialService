@@ -16,15 +16,15 @@ public class Institution {
     // todo type 소스상에 정의 해야 할까?
     @Id
     @Column(name = "id", nullable = false)
-    private String type;
+    private String code;
 
     @Column(name = "name", nullable = false)
     private String name;
 
 
     @Builder(builderMethodName = "ByInstitutionTypeBuilder")
-    public Institution(InstitutionType institutionType) {
-        this.type = institutionType.getType();
-        this.name = institutionType.getName();
+    public Institution(InstitutionCode institutionCode) {
+        this.code = institutionCode.getCode();
+        this.name = institutionCode.getName();
     }
 }

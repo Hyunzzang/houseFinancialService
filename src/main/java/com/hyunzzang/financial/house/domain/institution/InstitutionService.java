@@ -4,6 +4,7 @@ import com.hyunzzang.financial.house.common.dto.InstitutionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,13 +21,20 @@ public class InstitutionService {
         this.institutionRepository = institutionRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Institution> addInstitutions(Collection<Institution> institutionSet) {
         return institutionRepository.saveAll(institutionSet);
     }
 
+    @Transactional(readOnly = true)
     public List<InstitutionResponse> getAllInstitution() {
         return institutionRepository.findAll().stream()
                 .map(i -> new InstitutionResponse(i.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Institution getInstitutionByName(String name) {
+        return institutionRepository.findByName(name);
     }
 }
