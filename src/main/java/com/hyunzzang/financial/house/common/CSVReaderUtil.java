@@ -22,7 +22,7 @@ public class CSVReaderUtil {
     }
 
     public static List<String[]> readAll(MultipartFile file) throws HomeFinancialException {
-        try (Reader reader = new InputStreamReader(file.getInputStream())) {
+        try (Reader reader = new InputStreamReader(file.getInputStream(), "UTF-8")) {
             return readAll(reader);
         } catch (IOException e) {
             log.error(e.getMessage());

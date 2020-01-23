@@ -2,6 +2,7 @@ package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.application.HouseFinancialCsvService;
 import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
+import com.hyunzzang.financial.house.common.dto.YearMaxInstitutionResponse;
 import com.hyunzzang.financial.house.common.dto.YearTotalAmountResponse;
 import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +51,16 @@ public class HouseFinancialController {
         log.info(":: getTotalYear ::");
 
         return ResponseEntity.ok(houseFundService.getAllYearSumAmount());
+    }
+
+    /**
+     * 각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API
+     * @return
+     */
+    @GetMapping("/maxBank")
+    public ResponseEntity<List<YearMaxInstitutionResponse>> getMaxBankYear() {
+        log.info(":: getMaxAdmountYear ::");
+
+        return ResponseEntity.ok(houseFundService.getYearMaxAmountInstitution());
     }
 }

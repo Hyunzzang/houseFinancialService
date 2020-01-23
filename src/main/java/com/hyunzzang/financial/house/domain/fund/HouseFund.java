@@ -19,7 +19,7 @@ import java.time.Year;
         name="house_fund",
         uniqueConstraints={
                 @UniqueConstraint(
-                        columnNames={"year","month","inst_type"}
+                        columnNames={"year","month","inst_id"}
                 )
         }
 )
@@ -37,8 +37,8 @@ public class HouseFund {
     @Enumerated
     private Month month;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inst_type")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inst_id")
     private Institution institution;
 
     @Column

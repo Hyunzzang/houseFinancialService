@@ -1,9 +1,6 @@
 package com.hyunzzang.financial.house.domain.institution;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,12 +9,13 @@ import javax.persistence.Table;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 @Table(name="institution")
 public class Institution {
     // todo type 소스상에 정의 해야 할까?
     @Id
-    @Column(name = "type", nullable = false)
+    @Column(name = "id", nullable = false)
     private String type;
 
     @Column(name = "name", nullable = false)

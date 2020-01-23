@@ -23,6 +23,9 @@ public class YearTotalAmountResponse {
     public YearTotalAmountResponse(Year year, List<YearSumAmountResult> yearSumAmountResultList) {
         this.year = year.getValue();
         for (YearSumAmountResult val: yearSumAmountResultList) {
+            if (year.getValue() != val.getYear().getValue()) {
+                // todo 예외 처리를 하자.
+            }
             totalAmount += val.getSumAmount();
             detaailAmount.put(val.getInstitution().getName(), val.getSumAmount());
         }
