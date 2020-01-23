@@ -1,7 +1,7 @@
-package com.hyunzzang.financial.house.common;
+package com.hyunzzang.financial.house.common.util;
 
-import com.hyunzzang.financial.house.common.exception.HomeFinancialErrorMessage;
-import com.hyunzzang.financial.house.common.exception.HomeFinancialException;
+import com.hyunzzang.financial.house.common.exception.HouseFinancialErrorMessage;
+import com.hyunzzang.financial.house.common.exception.HouseFinancialException;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -21,12 +21,12 @@ public class CSVReaderUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static List<String[]> readAll(MultipartFile file) throws HomeFinancialException {
+    public static List<String[]> readAll(MultipartFile file) throws HouseFinancialException {
         try (Reader reader = new InputStreamReader(file.getInputStream(), "UTF-8")) {
             return readAll(reader);
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new HomeFinancialException(HomeFinancialErrorMessage.CSV_READER_ERROR);
+            throw new HouseFinancialException(HouseFinancialErrorMessage.CSV_READER_ERROR);
         }
     }
 
@@ -51,7 +51,7 @@ public class CSVReaderUtil {
             list = csvReader.readAll();
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new HomeFinancialException(HomeFinancialErrorMessage.CSV_READER_ERROR);
+            throw new HouseFinancialException(HouseFinancialErrorMessage.CSV_READER_ERROR);
         } finally {
             csvReader.close();
         }

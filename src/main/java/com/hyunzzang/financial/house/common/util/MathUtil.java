@@ -1,4 +1,4 @@
-package com.hyunzzang.financial.house.common;
+package com.hyunzzang.financial.house.common.util;
 
 import java.util.List;
 

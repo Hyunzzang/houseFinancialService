@@ -4,7 +4,6 @@ import com.hyunzzang.financial.house.domain.institution.Institution;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.Month;
 import java.util.List;
 
 public interface HouseFundRepository extends JpaRepository<HouseFund, Long> {
