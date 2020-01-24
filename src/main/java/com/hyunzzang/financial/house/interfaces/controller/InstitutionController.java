@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/institution")
+@RequestMapping(value = "/api/institution")
 public class InstitutionController {
     private InstitutionService institutionService;
 

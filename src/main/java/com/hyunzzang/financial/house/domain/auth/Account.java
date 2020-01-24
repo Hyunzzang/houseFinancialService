@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.util.Assert;
@@ -42,6 +43,17 @@ public class Account {
         Assert.notNull(pw, "패스워드가 널 입니다.");
 
         this.authId = authId;
-        this.pw = CipherUtil.sha256(pw);
+        this.pw = encrypt(pw);
+    }
+
+
+    public boolean verifyPassword(String pwd) throws NoSuchAlgorithmException {
+        String encrPwd = encrypt(pwd);
+        return StringUtils.equals(this.pw, encrPwd);
+    }
+
+
+    private String encrypt(String target) throws NoSuchAlgorithmException {
+        return CipherUtil.sha256(target);
     }
 }

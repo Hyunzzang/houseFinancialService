@@ -25,6 +25,6 @@ spring:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.springframework: DEBUG
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.springframework: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
     com.hyunzzang.financial.house: DEBUG

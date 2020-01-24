@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/finance/house")
+@RequestMapping(value = "/api/finance/house")
 public class HouseFinancialController {
 
     private HouseFinancialCsvService houseFinancialCsvService;
