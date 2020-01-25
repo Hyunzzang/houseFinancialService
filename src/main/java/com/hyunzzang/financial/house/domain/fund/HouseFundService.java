@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Month;
 import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,8 +23,9 @@ public class HouseFundService {
         this.houseFundRepository = houseFundRepository;
     }
 
+
+    @Transactional
     public List<HouseFund> addAllHouseFund(Collection<HouseFund> houseFunds) {
-        // todo 중복 저장에 대한 예외 처리를 하자
         return houseFundRepository.saveAll(houseFunds);
     }
 

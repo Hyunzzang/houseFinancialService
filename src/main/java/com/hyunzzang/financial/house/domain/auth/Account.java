@@ -54,6 +54,7 @@ public class Account {
 
 
     private String encrypt(String target) throws NoSuchAlgorithmException {
+        // todo SALT 를 적용 할까?
         return CipherUtil.sha256(target);
     }
 }

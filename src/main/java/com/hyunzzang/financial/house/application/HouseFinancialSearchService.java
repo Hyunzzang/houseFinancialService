@@ -2,6 +2,8 @@ package com.hyunzzang.financial.house.application;
 
 import com.hyunzzang.financial.house.common.dto.BankAverageResponse;
 import com.hyunzzang.financial.house.common.dto.EstimateAmountResponse;
+import com.hyunzzang.financial.house.common.exception.HouseFinancialErrorMessage;
+import com.hyunzzang.financial.house.common.exception.HouseFinancialException;
 import com.hyunzzang.financial.house.domain.fund.HouseFund;
 import com.hyunzzang.financial.house.domain.fund.HouseFundService;
 import com.hyunzzang.financial.house.domain.fund.YearAmountResult;
@@ -32,7 +34,7 @@ public class HouseFinancialSearchService {
     public BankAverageResponse getMaxMinAvgAmountForBank(String bankName) {
         Institution institution = institutionService.getInstitutionByName(bankName);
         if (institution == null) {
-            // todo 예외 처리를 하자
+            throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
         }
 
         List<YearAmountResult> avgAmountResultList = houseFundService.getMaxMinAvgAmount(institution);
@@ -43,7 +45,7 @@ public class HouseFinancialSearchService {
     public EstimateAmountResponse getEstimateAmount(String bankName, int month) {
         Institution institution = institutionService.getInstitutionByName(bankName);
         if (institution == null) {
-            // todo 예외 처리를 하자
+            throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
         }
 
         List<HouseFund> amountResultList = houseFundService.getAmountList(institution);
