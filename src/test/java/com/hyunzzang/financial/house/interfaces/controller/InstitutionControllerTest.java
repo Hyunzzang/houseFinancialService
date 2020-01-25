@@ -1,18 +1,21 @@
 package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.common.dto.InstitutionResponse;
+import com.hyunzzang.financial.house.domain.auth.Account;
+import com.hyunzzang.financial.house.domain.auth.TokenService;
 import com.hyunzzang.financial.house.domain.institution.InstitutionService;
-import com.hyunzzang.financial.house.interfaces.controller.InstitutionController;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(InstitutionController.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class InstitutionControllerTest {
+    private static final String HEADER_KEY_AUTHORIZATION = "Authorization";
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private TokenService JwtTokenService;
 
     @MockBean
     private InstitutionService institutionService;
@@ -42,11 +50,20 @@ public class InstitutionControllerTest {
 
         given(institutionService.getAllInstitution()).willReturn(institutionResponseList);
 
-        mvc.perform(get("/institution/list")
-                .contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/institution/list")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("국민은행"))
                 .andExpect(jsonPath("$[1].name").value("하나은행"));
+    }
+
+    private String getToken() throws NoSuchAlgorithmException {
+        return JwtTokenService.generate(
+                Account.builder()
+                        .authId("testId")
+                        .pw("123456")
+                        .build());
     }
 }
