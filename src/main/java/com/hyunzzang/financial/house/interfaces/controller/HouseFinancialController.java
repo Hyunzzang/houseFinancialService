@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/finance/house")
+@RequestMapping(value = "/api/fund")
 public class HouseFinancialController {
 
     private HouseFinancialCsvService houseFinancialCsvService;
@@ -39,6 +39,7 @@ public class HouseFinancialController {
     public ResponseEntity<HouseFinancialCsvResult> saveHomeFinancialFromCsv(MultipartFile file) {
         log.info(":: saveHomeFinancialFromCsv ::");
 
+        // todo 중복된 데이터 추가시 예외 처리를 하자.
         return ResponseEntity.ok(houseFinancialCsvService.addHouseFinancial(file));
     }
 

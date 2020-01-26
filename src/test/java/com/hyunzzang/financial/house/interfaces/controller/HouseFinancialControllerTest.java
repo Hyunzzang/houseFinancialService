@@ -67,7 +67,7 @@ public class HouseFinancialControllerTest {
 
         given(houseFinancialCsvService.addHouseFinancial(any(MultipartFile.class))).willReturn(houseFinancialCsvResult);
 
-        mvc.perform(MockMvcRequestBuilders.multipart("/api/finance/house/csv")
+        mvc.perform(MockMvcRequestBuilders.multipart("/api/fund/csv")
                 .file("file", "2005,1,1019,846,82,95,30,157,57,80,99,,,,,,,".getBytes())
                 .characterEncoding("UTF-8")
                 .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
@@ -88,7 +88,7 @@ public class HouseFinancialControllerTest {
 
         given(houseFundService.getAllYearSumAmount()).willReturn(yearTotalAmountResponseList);
 
-        mvc.perform(get("/api/finance/house/totalYear")
+        mvc.perform(get("/api/fund/totalYear")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ public class HouseFinancialControllerTest {
         given(houseFundService.getYearMaxAmountInstitution())
                 .willReturn(new YearMaxInstitutionResponse(2015, "신한은행"));
 
-        mvc.perform(get("/api/finance/house/maxBank")
+        mvc.perform(get("/api/fund/maxBank")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
@@ -123,7 +123,7 @@ public class HouseFinancialControllerTest {
 
         given(houseFinancialSearchService.getMaxMinAvgAmountForBank(any(String.class))).willReturn(bankAverageResponse);
 
-        mvc.perform(get("/api/finance/house/average/외한은행")
+        mvc.perform(get("/api/fund/average/외한은행")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())

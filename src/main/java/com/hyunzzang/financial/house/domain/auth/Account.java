@@ -17,6 +17,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+        name="account",
+        uniqueConstraints={
+                @UniqueConstraint(
+                        columnNames={"authId"}
+                )
+        }
+)
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

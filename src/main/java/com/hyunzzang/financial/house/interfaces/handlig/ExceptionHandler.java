@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandler {
 
+    // todo response 에러 포맷을 정의 하자.
     @ResponseBody
     @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
     @org.springframework.web.bind.annotation.ExceptionHandler(value = HouseFinancialException.class)

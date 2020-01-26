@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -29,6 +30,8 @@ public class AccountService {
 
     @Transactional
     public AccountResponse join(AccountRequest accountRequest) {
+        checkDuplicateAuthId(accountRequest.getAuthId());
+
         Account account;
         try {
             account = Account.builder()
@@ -46,6 +49,13 @@ public class AccountService {
         log.debug("token : {}", token);
 
         return new AccountResponse(account.getAuthId(), token);
+    }
+
+    private void checkDuplicateAuthId(String authId) {
+        Account account = accountRepository.findByAuthId(authId);
+        if (!Objects.isNull(account)) {
+            throw new AccountException(AccountErrorMessage.ACCOUNT_DUPLICATION);
+        }
     }
 
     public AccountResponse login(AccountRequest accountRequest) {
