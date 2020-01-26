@@ -11,7 +11,8 @@ public interface HouseFundRepository extends JpaRepository<HouseFund, Long> {
     @Query("SELECT new com.hyunzzang.financial.house.domain.fund.YearSumAmountResult" +
             "(h.year, h.institution , SUM(h.amount) as sumAmount) " +
             "FROM HouseFund h " +
-            "group by h.year, h.institution")
+            "group by h.year, h.institution " +
+            "order by h.year asc ")
     List<YearSumAmountResult> findYearSumAmount();
 
     /*

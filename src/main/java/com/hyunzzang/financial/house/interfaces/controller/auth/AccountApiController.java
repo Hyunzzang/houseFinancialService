@@ -1,5 +1,6 @@
 package com.hyunzzang.financial.house.interfaces.controller.auth;
 
+import com.hyunzzang.financial.house.common.constant.AuthConstant;
 import com.hyunzzang.financial.house.common.dto.auth.AccountRequest;
 import com.hyunzzang.financial.house.common.dto.auth.AccountResponse;
 import com.hyunzzang.financial.house.domain.auth.AccountService;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
@@ -30,12 +33,14 @@ public class AccountApiController {
      * @return
      */
     @PostMapping("/signup")
-    public ResponseEntity<AccountResponse> signup(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountResponse> signup(@RequestBody AccountRequest accountRequest
+            , HttpServletResponse response) {
         log.info(":: signup ::");
         log.debug("AuthId : {}", accountRequest.getAuthId());
         // todo request validator 해야 하지 않을까?
 
         AccountResponse accountResponse = accountService.join(accountRequest);
+        response.setHeader(AuthConstant.HEADER_KEY_AUTHORIZATION, accountResponse.getToken());
 
         return ResponseEntity.ok(accountResponse);
     }
@@ -47,11 +52,15 @@ public class AccountApiController {
      * @return
      */
     @PostMapping("/signin")
-    public ResponseEntity<String> signin(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountResponse> signin(@RequestBody AccountRequest accountRequest
+            , HttpServletResponse response) {
         log.info(":: signin ::");
         log.debug("AuthId : {}", accountRequest.getAuthId());
         // todo request validator 해야 하지 않을까?
 
-        return ResponseEntity.ok(accountService.login(accountRequest));
+        AccountResponse accountResponse = accountService.login(accountRequest);
+        response.setHeader(AuthConstant.HEADER_KEY_AUTHORIZATION, accountResponse.getToken());
+
+        return ResponseEntity.ok(accountResponse);
     }
 }

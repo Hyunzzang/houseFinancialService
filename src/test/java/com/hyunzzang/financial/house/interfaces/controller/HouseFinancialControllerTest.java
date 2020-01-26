@@ -2,6 +2,7 @@ package com.hyunzzang.financial.house.interfaces.controller;
 
 import com.hyunzzang.financial.house.application.HouseFinancialCsvService;
 import com.hyunzzang.financial.house.application.HouseFinancialSearchService;
+import com.hyunzzang.financial.house.common.constant.AuthConstant;
 import com.hyunzzang.financial.house.common.dto.BankAverageResponse;
 import com.hyunzzang.financial.house.common.dto.HouseFinancialCsvResult;
 import com.hyunzzang.financial.house.common.dto.YearMaxInstitutionResponse;
@@ -41,7 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class HouseFinancialControllerTest {
-    private static final String HEADER_KEY_AUTHORIZATION = "Authorization";
 
     @Autowired
     private MockMvc mvc;
@@ -70,7 +70,7 @@ public class HouseFinancialControllerTest {
         mvc.perform(MockMvcRequestBuilders.multipart("/api/finance/house/csv")
                 .file("file", "2005,1,1019,846,82,95,30,157,57,80,99,,,,,,,".getBytes())
                 .characterEncoding("UTF-8")
-                .header(HEADER_KEY_AUTHORIZATION, getToken()))
+                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.addedInstitutionCount").value(5))
                 .andExpect(jsonPath("$.addedHouseFundCount").value(100));
@@ -90,7 +90,7 @@ public class HouseFinancialControllerTest {
 
         mvc.perform(get("/api/finance/house/totalYear")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HEADER_KEY_AUTHORIZATION, getToken()))
+                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].year").value(2017))
@@ -101,21 +101,15 @@ public class HouseFinancialControllerTest {
     @Test
     @DisplayName("각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API")
     public void getMaxBankYear_mock_테스트() throws Exception {
-        List<YearMaxInstitutionResponse> yearMaxInstitutionResponseList = new ArrayList<>();
-        yearMaxInstitutionResponseList.add(new YearMaxInstitutionResponse(2014, "국민은행"));
-        yearMaxInstitutionResponseList.add(new YearMaxInstitutionResponse(2015, "신한은행"));
-
-        given(houseFundService.getYearMaxAmountInstitution()).willReturn(yearMaxInstitutionResponseList);
+        given(houseFundService.getYearMaxAmountInstitution())
+                .willReturn(new YearMaxInstitutionResponse(2015, "신한은행"));
 
         mvc.perform(get("/api/finance/house/maxBank")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HEADER_KEY_AUTHORIZATION, getToken()))
+                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].year").value(2014))
-                .andExpect(jsonPath("$[0].bank").value("국민은행"))
-                .andExpect(jsonPath("$[1].year").value(2015))
-                .andExpect(jsonPath("$[1].bank").value("신한은행"));
+                .andExpect(jsonPath("$.year").value(2015))
+                .andExpect(jsonPath("$.bank").value("신한은행"));
     }
 
     @Test
@@ -131,7 +125,7 @@ public class HouseFinancialControllerTest {
 
         mvc.perform(get("/api/finance/house/average/외한은행")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HEADER_KEY_AUTHORIZATION, getToken()))
+                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bank").value(bankName))
                 .andExpect(jsonPath("$.support_amount[0].year").value(2014))

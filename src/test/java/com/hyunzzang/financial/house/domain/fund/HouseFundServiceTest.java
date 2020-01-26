@@ -74,10 +74,9 @@ public class HouseFundServiceTest {
 
     @Test
     public void getYearMaxAmountInstitutionTest() {
-        List<YearMaxInstitutionResponse> yearMaxInstitutionResponseList = houseFundService.getYearMaxAmountInstitution();
-        assertNotNull(yearMaxInstitutionResponseList);
+        YearMaxInstitutionResponse yearMaxInstitutionResponse = houseFundService.getYearMaxAmountInstitution();
+        assertNotNull(yearMaxInstitutionResponse);
 
-        YearMaxInstitutionResponse yearMaxInstitutionResponse = yearMaxInstitutionResponseList.get(0);
         assertTrue(2015 == yearMaxInstitutionResponse.getYear());
         assertEquals("국민은행", yearMaxInstitutionResponse.getBank());
     }

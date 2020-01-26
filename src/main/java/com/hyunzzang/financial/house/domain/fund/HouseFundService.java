@@ -31,7 +31,10 @@ public class HouseFundService {
 
     @Transactional(readOnly = true)
     public List<YearTotalAmountResponse> getAllYearSumAmount() {
-        Map<Year, List<YearSumAmountResult>> yearGroupMap = getYearGroupSumAmount();
+        // todo 데이터가 많을 경우를 대비 하자.
+        List<YearSumAmountResult> resList = houseFundRepository.findYearSumAmount();
+        Map<Year, List<YearSumAmountResult>> yearGroupMap = resList.stream()
+                .collect(groupingBy(YearSumAmountResult::getYear));
 
         return yearGroupMap.keySet().stream()
                 .map(k -> new YearTotalAmountResponse(k, yearGroupMap.get(k)))
@@ -39,19 +42,14 @@ public class HouseFundService {
     }
 
     @Transactional(readOnly = true)
-    public List<YearMaxInstitutionResponse> getYearMaxAmountInstitution() {
-        Map<Year, List<YearSumAmountResult>> yearGroupMap = getYearGroupSumAmount();
+    public YearMaxInstitutionResponse getYearMaxAmountInstitution() {
+        // todo 데이터가 많을 경우를 대비 하자.
+        List<YearSumAmountResult> resList = houseFundRepository.findYearSumAmount();
+        YearSumAmountResult opMaxAmountResult = resList.stream()
+                .sorted(Comparator.comparing(YearSumAmountResult::getSumAmount).reversed())
+                .findFirst().orElseThrow(NoSuchElementException::new);
 
-        List<YearMaxInstitutionResponse> resList = new ArrayList<>();
-        for(Year year: yearGroupMap.keySet()) {
-            List<YearSumAmountResult> sumAmountList = yearGroupMap.get(year);
-            YearSumAmountResult yearSumAmountResult = sumAmountList.stream()
-                    .max(Comparator.comparing(YearSumAmountResult::getSumAmount))
-                    .orElseThrow(NoSuchElementException::new);
-            resList.add(new YearMaxInstitutionResponse(yearSumAmountResult));
-        }
-
-        return resList;
+        return new YearMaxInstitutionResponse(opMaxAmountResult);
     }
 
     @Transactional(readOnly = true)
@@ -76,11 +74,8 @@ public class HouseFundService {
         return houseFundRepository.findAllByInstitutionOrderByYearAscMonthAsc(institution);
     }
 
-    private Map<Year, List<YearSumAmountResult>> getYearGroupSumAmount() {
-        // todo 데이터가 많을 경우를 대비 하자.
-        List<YearSumAmountResult> resList = houseFundRepository.findYearSumAmount();
-        return resList.stream()
-                .collect(groupingBy(YearSumAmountResult::getYear));
-    }
+//    private Map<Year, List<YearSumAmountResult>> getYearGroupSumAmount() {
+//
+//    }
 
 }

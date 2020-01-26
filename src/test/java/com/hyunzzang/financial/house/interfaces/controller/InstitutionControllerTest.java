@@ -1,5 +1,6 @@
 package com.hyunzzang.financial.house.interfaces.controller;
 
+import com.hyunzzang.financial.house.common.constant.AuthConstant;
 import com.hyunzzang.financial.house.common.dto.InstitutionResponse;
 import com.hyunzzang.financial.house.domain.auth.Account;
 import com.hyunzzang.financial.house.domain.auth.TokenService;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class InstitutionControllerTest {
-    private static final String HEADER_KEY_AUTHORIZATION = "Authorization";
 
     @Autowired
     private MockMvc mvc;
@@ -52,7 +52,7 @@ public class InstitutionControllerTest {
 
         mvc.perform(get("/api/institution/list")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HEADER_KEY_AUTHORIZATION, getToken()))
+                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("국민은행"))

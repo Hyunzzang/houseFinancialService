@@ -58,7 +58,7 @@ public class HouseFinancialController {
      * @return
      */
     @GetMapping("/maxBank")
-    public ResponseEntity<List<YearMaxInstitutionResponse>> getMaxBankYear() {
+    public ResponseEntity<YearMaxInstitutionResponse> getMaxBankYear() {
         log.info(":: getMaxAdmountYear ::");
 
         return ResponseEntity.ok(houseFundService.getYearMaxAmountInstitution());

@@ -1,6 +1,7 @@
 package com.hyunzzang.financial.house.interfaces.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyunzzang.financial.house.common.constant.AuthConstant;
 import com.hyunzzang.financial.house.common.dto.auth.AccountRequest;
 import com.hyunzzang.financial.house.common.dto.auth.AccountResponse;
 import com.hyunzzang.financial.house.domain.auth.AccountService;
@@ -49,30 +50,36 @@ public class AccountApiControllerTest {
 
         given(accountService.join(any(AccountRequest.class))).willReturn(accountResponse);
 
-        mvc.perform(post("/api/account/signup")
+        MvcResult mvcResult = mvc.perform(post("/api/account/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(accountRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("authId").value("testId"))
-                .andExpect(jsonPath("token").value("testToken"));
+                .andExpect(jsonPath("token").value("testToken"))
+                .andReturn();
+
+        String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
+        assertEquals("testToken", token);
     }
 
 
     @Test
     public void signin_mock_테스트() throws Exception {
         AccountRequest accountRequest = new AccountRequest("testId", "testPw");
-        String resToken = "testToken";
+        AccountResponse accountResponse = new AccountResponse("testId", "testToken");
 
-        given(accountService.login(any(AccountRequest.class))).willReturn(resToken);
+        given(accountService.login(any(AccountRequest.class))).willReturn(accountResponse);
 
-        MvcResult result = mvc.perform(post("/api/account/signin")
+        MvcResult mvcResult = mvc.perform(post("/api/account/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(accountRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("authId").value("testId"))
+                .andExpect(jsonPath("token").value("testToken"))
                 .andReturn();
-
-        assertEquals(result.getResponse().getContentAsString(), resToken);
+        String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
+        assertEquals("testToken", token);
     }
 }

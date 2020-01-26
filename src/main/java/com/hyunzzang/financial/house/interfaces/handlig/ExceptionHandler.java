@@ -1,5 +1,6 @@
 package com.hyunzzang.financial.house.interfaces.handlig;
 
+import com.hyunzzang.financial.house.common.exception.AccountException;
 import com.hyunzzang.financial.house.common.exception.HouseFinancialException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,18 @@ public class ExceptionHandler {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
     @org.springframework.web.bind.annotation.ExceptionHandler(value = HouseFinancialException.class)
-    public ResponseEntity handelException(HouseFinancialException e) {
+    public ResponseEntity fundHandelException(HouseFinancialException e) {
         return ResponseEntity
                 .status(HttpStatus.EXPECTATION_FAILED)
-                .body(e.getHouseFinancialErrorMessage());
+                .body(e.getHouseFinancialErrorMessage().getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = AccountException.class)
+    public ResponseEntity authHandelException(AccountException e) {
+        return ResponseEntity
+                .status(HttpStatus.EXPECTATION_FAILED)
+                .body(e.getAccountErrorMessage().getMessage());
     }
 }
