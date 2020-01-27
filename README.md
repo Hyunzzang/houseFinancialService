@@ -91,9 +91,10 @@
   $ git clone https://github.com/Hyunzzang/houseFinancialService.git
   ```
 
-  * mvnw으로 빌드 (mac os)
+  * 프로젝트 디렉토리의 mvnw으로 빌드 (mac os)
   ```bash
-  ./mvnw clean package
+  $ cd houseFinancialService
+  $ ./mvnw clean package
   ```
   * mvnw으로 빌드 (윈도우)
   ```bash
@@ -104,37 +105,25 @@
   ```bash
   $ java -jar target/house-0.0.1-SNAPSHOT.jar
   ```
-  * maven으로 spring boot 실행 방법
+  * mvnw으로 spring boot 실행 방법
   ```bash
-  $ mvn spring-boot:run
+  $ ./mvnw spring-boot:run
   ```
  
 
 ## API 실행 시나리오
 #### 1. 계정 등록
 - 아이디와 패스워드로 보내 계정을 만든다.
+- {로그인 아이디}, {로그인 패스워드}만 수정하면 됨
 
-> curl -X POST \
-  http://localhost:8080/api/account/signup \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json' 
-  -d '{
-	"authId":{로그인 아이디},
-	"pw":{로그인 패스워드}
-}'
+> curl -X POST http://localhost:8080/api/account/signup -H 'cache-control: no-cache' -H 'content-type: application/json' -d '{ "authId":{로그인 아이디}, "pw":{로그인 패스워드} }'
 
 #### 2. 로그인 
 - 등록한 아이와 패스워드로 로그인 한다.
 - 결과로 토큰을 받을 수 있다. 아래 api에 접근 하기 위해서 필요하다.
+- {로그인 아이디}, {로그인 패스워드}만 수정하면 됨
 
->curl -X POST \
-  http://localhost:8080/api/account/signin \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json' 
-  -d '{
-	"authId":{로그인 아이디},
-	"pw":{로그인 패스워드}
-}'
+> curl -X POST http://localhost:8080/api/account/signin -H 'cache-control: no-cache' -H 'content-type: application/json' -d '{ "authId":{로그인 아이디}, "pw":{로그인 패스워드} }'
 
 #### 3. 주택금융 공급현황 분석 데이터 디비에 저장
 - 웹브라우저에서 /upload.html에 접속하여 csv 파일을 추가 한다.
@@ -143,35 +132,38 @@
 > http://localhost:8080/uplad.html  
 
 #### 4. 금융기관(은행) 목록을 출력
->curl -X GET \
-  http://localhost:8080/api/institution/list \
-  -H 'authorization: {로그인 후 받은 토큰}' \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json'
+- 로그인 후 결과로 받은 토큰 값을 {로그인 후 받은 토큰}에 입력하면 됨
+
+> curl -X GET http://localhost:8080/api/institution/list -H 'authorization: {로그인 후 받은 토큰}' -H 'cache-control: no-cache' -H 'content-type: application/json'
 
 
 #### 5. 년도별 각 금융기관의 지원금액 합계를 출력
->curl -X GET \
-  http://localhost:8080/api/fund/totalYear \
-  -H 'authorization: {로그인 후 받은 토큰}' \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json'
+- 로그인 후 결과로 받은 토큰 값을 {로그인 후 받은 토큰}에 입력하면 됨
+
+> curl -X GET http://localhost:8080/api/fund/totalYear -H 'authorization: {로그인 후 받은 토큰}' -H 'cache-control: no-cache' -H 'content-type: application/json'
 
 #### 5. 각 년도별 각기관의 전체지 원금액 중에서 가장 큰 금액의 기관명을 출력
->curl -X GET \
+- 로그인 후 결과로 받은 토큰 값을 {로그인 후 받은 토큰}에 입력하면 됨
+
+> curl -X GET \
   http://localhost:8080/api/fund/maxBank \
   -H 'authorization: {로그인 후 받은 토큰}' \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json'
 
 #### 6. 전체 년도에서 외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력
->curl -X GET \
-  http://localhost:8080/api/fund/average/외환은행 \
+- 로그인 후 결과로 받은 토큰 값을 {로그인 후 받은 토큰}에 입력하면 됨
+- /api/fund/average/{은행명} 은행명이 한글일 경우 url encode를 해야함
+  
+> curl -X GET \
+  http://localhost:8080/api/fund/average/%EC%99%B8%ED%99%98%EC%9D%80%ED%96%89 \
   -H 'authorization: {로그인 후 받은 토큰}' \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json'
 
 #### 7. 토큰 재발급
+- 로그인 후 결과로 받은 토큰 값을 {로그인 후 받은 토큰}에 입력하면 됨
+- 
 >curl -X GET \
   http://localhost:8080/api/institution/list \
   -H 'authorization: Bearer {로그인 후 받은 토큰}' \
