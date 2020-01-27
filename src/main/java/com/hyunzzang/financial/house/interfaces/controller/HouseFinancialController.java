@@ -79,14 +79,14 @@ public class HouseFinancialController {
         return ResponseEntity.ok(houseFinancialSearchService.getMaxMinAvgAmountForBank(bankName));
     }
 
-    @GetMapping("/estimate/{bankName}/{month}")
-    public ResponseEntity<EstimateAmountResponse> getEstimateForBank(
-            @PathVariable("bankName") String bankName,
-            @PathVariable("month") int month) {
-        log.info(":: getEstimateForBank ::");
-        log.debug("bankName : {}", bankName);
-        log.debug("month : {}", month);
-
-        return ResponseEntity.ok(houseFinancialSearchService.getEstimateAmount(bankName, month));
-    }
+//    @GetMapping("/estimate/{bankName}/{month}")
+//    public ResponseEntity<EstimateAmountResponse> getEstimateForBank(
+//            @PathVariable("bankName") String bankName,
+//            @PathVariable("month") int month) {
+//        log.info(":: getEstimateForBank ::");
+//        log.debug("bankName : {}", bankName);
+//        log.debug("month : {}", month);
+//
+//        return ResponseEntity.ok(houseFinancialSearchService.getEstimateAmount(bankName, month));
+//    }
 }

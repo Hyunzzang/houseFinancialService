@@ -84,7 +84,11 @@
 
 
 ## 빌드 및 실행 방법
-  * Java, maven은 설치되어 있어야 합니다.
+  * 소스를 내려 받는다.
+  ```bash
+  $ git clone https://github.com/Hyunzzang/houseFinancialService.git
+  ```
+
   * 프록젝트 maven으로 빌드(프로젝트 디렉토리에)
   ```bash
   $ mvn install
