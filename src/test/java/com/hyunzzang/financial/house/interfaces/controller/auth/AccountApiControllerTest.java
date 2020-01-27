@@ -28,58 +28,57 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AccountApiController.class)
 public class AccountApiControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @MockBean
-    private AccountService accountService;
+  @MockBean
+  private AccountService accountService;
 
-    @MockBean
-    @Qualifier("jwtTokenService")
-    private TokenService tokenService;
-
-
-
-    @Test
-    public void signup_mock_테스트() throws Exception {
-        AccountRequest accountRequest = new AccountRequest("testId", "testPw");
-        AccountResponse accountResponse = new AccountResponse("testId", "testToken");
-
-        given(accountService.join(any(AccountRequest.class))).willReturn(accountResponse);
-
-        MvcResult mvcResult = mvc.perform(post("/api/account/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(accountRequest)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("authId").value("testId"))
-                .andExpect(jsonPath("token").value("testToken"))
-                .andReturn();
-
-        String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
-        assertEquals("testToken", token);
-    }
+  @MockBean
+  @Qualifier("jwtTokenService")
+  private TokenService tokenService;
 
 
-    @Test
-    public void signin_mock_테스트() throws Exception {
-        AccountRequest accountRequest = new AccountRequest("testId", "testPw");
-        AccountResponse accountResponse = new AccountResponse("testId", "testToken");
+  @Test
+  public void signup_mock_테스트() throws Exception {
+    AccountRequest accountRequest = new AccountRequest("testId", "testPw");
+    AccountResponse accountResponse = new AccountResponse("testId", "testToken");
 
-        given(accountService.login(any(AccountRequest.class))).willReturn(accountResponse);
+    given(accountService.join(any(AccountRequest.class))).willReturn(accountResponse);
 
-        MvcResult mvcResult = mvc.perform(post("/api/account/signin")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(accountRequest)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("authId").value("testId"))
-                .andExpect(jsonPath("token").value("testToken"))
-                .andReturn();
-        String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
-        assertEquals("testToken", token);
-    }
+    MvcResult mvcResult = mvc.perform(post("/api/account/signup")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(accountRequest)))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("authId").value("testId"))
+        .andExpect(jsonPath("token").value("testToken"))
+        .andReturn();
+
+    String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
+    assertEquals("testToken", token);
+  }
+
+
+  @Test
+  public void signin_mock_테스트() throws Exception {
+    AccountRequest accountRequest = new AccountRequest("testId", "testPw");
+    AccountResponse accountResponse = new AccountResponse("testId", "testToken");
+
+    given(accountService.login(any(AccountRequest.class))).willReturn(accountResponse);
+
+    MvcResult mvcResult = mvc.perform(post("/api/account/signin")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(accountRequest)))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("authId").value("testId"))
+        .andExpect(jsonPath("token").value("testToken"))
+        .andReturn();
+    String token = mvcResult.getResponse().getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
+    assertEquals("testToken", token);
+  }
 }

@@ -11,20 +11,21 @@ import javax.persistence.Table;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name="institution")
+@Table(name = "institution")
 public class Institution {
-    // todo type 소스상에 정의 해야 할까?
-    @Id
-    @Column(name = "id", nullable = false)
-    private String code;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+  // todo type 소스상에 정의 해야 할까?
+  @Id
+  @Column(name = "id", nullable = false)
+  private String code;
+
+  @Column(name = "name", nullable = false)
+  private String name;
 
 
-    @Builder(builderMethodName = "ByInstitutionTypeBuilder")
-    public Institution(InstitutionCode institutionCode) {
-        this.code = institutionCode.getCode();
-        this.name = institutionCode.getName();
-    }
+  @Builder(builderMethodName = "ByInstitutionTypeBuilder")
+  public Institution(InstitutionCode institutionCode) {
+    this.code = institutionCode.getCode();
+    this.name = institutionCode.getName();
+  }
 }

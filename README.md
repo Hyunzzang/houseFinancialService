@@ -53,7 +53,7 @@
 
 > [GET] /api/fund/average/외환은행
 
-#### 6. 특정 은행의 특정 달에 대해서 2018년도 해당 달에 금융지원 금액을 예측하는 API
+#### 6. 특정 은행의 특정 달에 대해서 2018년도 해당 달에 금융지원 금액을 예측하는 API(완료못함)
   * 디비 금융기관(institution)테이블에서 기관 정보를 가져온다.
   * 디비 주택금융기금(house_fund)테이블에서 해당 기관의 모든 정보를 가져온다.
 
@@ -84,15 +84,22 @@
 
 
 ## 빌드 및 실행 방법
+  - java8 이상 필요
+
   * 소스를 내려 받는다.
   ```bash
   $ git clone https://github.com/Hyunzzang/houseFinancialService.git
   ```
 
-  * 프록젝트 maven으로 빌드(프로젝트 디렉토리에)
+  * mvnw으로 빌드 (mac os)
   ```bash
-  $ mvn install
+  ./mvnw clean package
   ```
+  * mvnw으로 빌드 (윈도우)
+  ```bash
+  ./mvnw.cmd clean install
+  ```
+
   * 빌드 후 java -jar 으로 실행 방법 
   ```bash
   $ java -jar target/house-0.0.1-SNAPSHOT.jar
@@ -164,15 +171,8 @@
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json'
 
-#### 7. 특정 은행의 특정 달에 대해서 2018년도 해당 달에 금융지원 예측 금액 출력
+#### 7. 토큰 재발급
 >curl -X GET \
-  http://localhost:8080/api/fund/estimate/하나은행 \
-  -H 'authorization: {로그인 후 받은 토큰}' \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json'
-
-  #### 8. 토큰 재발급
-  >curl -X GET \
   http://localhost:8080/api/institution/list \
   -H 'authorization: Bearer {로그인 후 받은 토큰}' \
   -H 'cache-control: no-cache' \

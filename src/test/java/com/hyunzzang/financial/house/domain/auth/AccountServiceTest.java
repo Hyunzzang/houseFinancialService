@@ -1,6 +1,5 @@
 package com.hyunzzang.financial.house.domain.auth;
 
-import com.hyunzzang.financial.house.common.constant.AuthConstant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,39 +18,39 @@ import static org.junit.Assert.assertTrue;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class AccountServiceTest {
 
-    @Autowired
-    private AccountService accountService;
+  @Autowired
+  private AccountService accountService;
 
-    @Autowired
-    @Qualifier("jwtTokenService")
-    private TokenService tokenService;
-
-
-    @Test
-    public void refreshTokenTest() throws NoSuchAlgorithmException {
-        Account account = Account.builder()
-                .authId("testId")
-                .pw("123456")
-                .build();
-
-        String testToken = tokenService.generate(account);
-        assertNotNull(testToken);
-
-        String refreshToken = accountService.refreshToken(testToken);
-        assertNotNull(refreshToken);
-        assertTrue(accountService.verifyToken(testToken));
-    }
+  @Autowired
+  @Qualifier("jwtTokenService")
+  private TokenService tokenService;
 
 
-    @Test
-    public void verifyTokenTest() throws NoSuchAlgorithmException {
-        Account account = Account.builder()
-                .authId("testId")
-                .pw("123456")
-                .build();
+  @Test
+  public void refreshTokenTest() throws NoSuchAlgorithmException {
+    Account account = Account.builder()
+        .authId("testId")
+        .pw("123456")
+        .build();
 
-        String testToken = tokenService.generate(account);
-        assertNotNull(testToken);
-        assertTrue(accountService.verifyToken(testToken));
-    }
+    String testToken = tokenService.generate(account);
+    assertNotNull(testToken);
+
+    String refreshToken = accountService.refreshToken(testToken);
+    assertNotNull(refreshToken);
+    assertTrue(accountService.verifyToken(testToken));
+  }
+
+
+  @Test
+  public void verifyTokenTest() throws NoSuchAlgorithmException {
+    Account account = Account.builder()
+        .authId("testId")
+        .pw("123456")
+        .build();
+
+    String testToken = tokenService.generate(account);
+    assertNotNull(testToken);
+    assertTrue(accountService.verifyToken(testToken));
+  }
 }

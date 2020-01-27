@@ -17,38 +17,39 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AccountInterceptor extends HandlerInterceptorAdapter {
 
-    private AccountService accountService;
+  private AccountService accountService;
 
-    @Autowired
-    private AccountInterceptor(AccountService accountService) {
-        this.accountService = accountService;
+  @Autowired
+  private AccountInterceptor(AccountService accountService) {
+    this.accountService = accountService;
+  }
+
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws Exception {
+    log.info("[postHandle][" + request + "]");
+
+    return authenticate(request, response);
+  }
+
+  private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
+    log.info(":: authenticate ::");
+
+    String authHeader = request.getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
+    log.debug("Auth header : {}", authHeader);
+    if (StringUtils.isEmpty(authHeader)) {
+      throw new AccountException(AccountErrorMessage.TOKEN_NONE);
     }
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("[postHandle][" + request + "]");
-
-        return authenticate(request, response);
+    if (StringUtils.contains(authHeader, AuthConstant.HEADER_VAL_TOKEN_REFRESH)) {
+      String oldToken = StringUtils.removeStart(authHeader, AuthConstant.HEADER_VAL_TOKEN_REFRESH);
+      String refreshToken = accountService.refreshToken(oldToken);
+      response.setHeader(AuthConstant.HEADER_KEY_AUTHORIZATION, refreshToken);
+      return true;
+    } else if (accountService.verifyToken(authHeader)) {
+      return true;
     }
 
-    private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
-        log.info(":: authenticate ::");
-
-        String authHeader = request.getHeader(AuthConstant.HEADER_KEY_AUTHORIZATION);
-        log.debug("Auth header : {}", authHeader);
-        if (StringUtils.isEmpty(authHeader)) {
-            throw new AccountException(AccountErrorMessage.TOKEN_NONE);
-        }
-
-        if (StringUtils.contains(authHeader, AuthConstant.HEADER_VAL_TOKEN_REFRESH)) {
-            String oldToken = StringUtils.removeStart(authHeader, AuthConstant.HEADER_VAL_TOKEN_REFRESH);
-            String refreshToken = accountService.refreshToken(oldToken);
-            response.setHeader(AuthConstant.HEADER_KEY_AUTHORIZATION, refreshToken);
-            return true;
-        } else if (accountService.verifyToken(authHeader)) {
-            return true;
-        }
-
-        throw new AccountException(AccountErrorMessage.TOKEN_INVALID);
-    }
+    throw new AccountException(AccountErrorMessage.TOKEN_INVALID);
+  }
 }

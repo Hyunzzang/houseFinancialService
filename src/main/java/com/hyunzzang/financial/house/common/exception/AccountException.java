@@ -4,10 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class AccountException extends RuntimeException {
-    private AccountErrorMessage accountErrorMessage;
 
-    public AccountException(AccountErrorMessage accountErrorMessage) {
-        super(accountErrorMessage.getMessage());
-        this.accountErrorMessage = accountErrorMessage;
-    }
+  private AccountErrorMessage accountErrorMessage;
+
+  public AccountException(AccountErrorMessage accountErrorMessage) {
+    super(accountErrorMessage.getMessage());
+    this.accountErrorMessage = accountErrorMessage;
+  }
 }

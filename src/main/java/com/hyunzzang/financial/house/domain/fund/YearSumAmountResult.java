@@ -11,7 +11,8 @@ import java.time.Year;
 @NoArgsConstructor
 @AllArgsConstructor
 public class YearSumAmountResult {
-    private Year year;
-    private Institution institution;
-    private Long sumAmount;
+
+  private Year year;
+  private Institution institution;
+  private Long sumAmount;
 }

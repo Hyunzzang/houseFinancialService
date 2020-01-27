@@ -9,17 +9,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private AccountInterceptor accountInterceptor;
+  private AccountInterceptor accountInterceptor;
 
-    @Autowired
-    public WebMvcConfig(AccountInterceptor accountInterceptor) {
-        this.accountInterceptor = accountInterceptor;
-    }
+  @Autowired
+  public WebMvcConfig(AccountInterceptor accountInterceptor) {
+    this.accountInterceptor = accountInterceptor;
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(accountInterceptor)
-                .addPathPatterns("/api/**/")
-                .excludePathPatterns("/api/fund/csv", "/api/account/signup", "/api/account/signin");
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(accountInterceptor)
+        .addPathPatterns("/api/**/")
+        .excludePathPatterns("/api/fund/csv", "/api/account/signup", "/api/account/signin");
+  }
 }

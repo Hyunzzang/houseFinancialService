@@ -19,37 +19,37 @@ import java.util.List;
 @Service
 public class HouseFinancialSearchService {
 
-    private HouseFundService houseFundService;
-    private InstitutionService institutionService;
+  private HouseFundService houseFundService;
+  private InstitutionService institutionService;
 
 
-    @Autowired
-    public HouseFinancialSearchService(HouseFundService houseFundService,
-                                       InstitutionService institutionService) {
-        this.houseFundService = houseFundService;
-        this.institutionService = institutionService;
+  @Autowired
+  public HouseFinancialSearchService(HouseFundService houseFundService,
+      InstitutionService institutionService) {
+    this.houseFundService = houseFundService;
+    this.institutionService = institutionService;
+  }
+
+
+  public BankAverageResponse getMaxMinAvgAmountForBank(String bankName) {
+    Institution institution = institutionService.getInstitutionByName(bankName);
+    if (institution == null) {
+      throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
     }
 
+    List<YearAmountResult> avgAmountResultList = houseFundService.getMaxMinAvgAmount(institution);
 
-    public BankAverageResponse getMaxMinAvgAmountForBank(String bankName) {
-        Institution institution = institutionService.getInstitutionByName(bankName);
-        if (institution == null) {
-            throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
-        }
+    return new BankAverageResponse(bankName, avgAmountResultList);
+  }
 
-        List<YearAmountResult> avgAmountResultList = houseFundService.getMaxMinAvgAmount(institution);
-
-        return new BankAverageResponse(bankName, avgAmountResultList);
+  public EstimateAmountResponse getEstimateAmount(String bankName, int month) {
+    Institution institution = institutionService.getInstitutionByName(bankName);
+    if (institution == null) {
+      throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
     }
 
-    public EstimateAmountResponse getEstimateAmount(String bankName, int month) {
-        Institution institution = institutionService.getInstitutionByName(bankName);
-        if (institution == null) {
-            throw new HouseFinancialException(HouseFinancialErrorMessage.INSTITUTION_NONE);
-        }
+    List<HouseFund> amountResultList = houseFundService.getAmountList(institution);
 
-        List<HouseFund> amountResultList = houseFundService.getAmountList(institution);
-
-        return new EstimateAmountResponse();
-    }
+    return new EstimateAmountResponse();
+  }
 }

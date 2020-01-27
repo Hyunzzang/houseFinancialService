@@ -18,51 +18,52 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-        name="account",
-        uniqueConstraints={
-                @UniqueConstraint(
-                        columnNames={"authId"}
-                )
-        }
+    name = "account",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            columnNames = {"authId"}
+        )
+    }
 )
 public class Account {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
 
-    @Column
-    private String authId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
+  private Long id;
 
-    @Column
-    private String pw;
+  @Column
+  private String authId;
 
-    @Column(updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @Column
+  private String pw;
 
-    @Column
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+  @Column(updatable = false)
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
-    @Builder
-    public Account(String authId, String pw) throws NoSuchAlgorithmException {
-        Assert.notNull(authId, "인증 아이디가 널 입니다.");
-        Assert.notNull(pw, "패스워드가 널 입니다.");
+  @Column
+  @UpdateTimestamp
+  private LocalDateTime updatedAt;
 
-        this.authId = authId;
-        this.pw = encrypt(pw);
-    }
+  @Builder
+  public Account(String authId, String pw) throws NoSuchAlgorithmException {
+    Assert.notNull(authId, "인증 아이디가 널 입니다.");
+    Assert.notNull(pw, "패스워드가 널 입니다.");
 
-
-    public boolean verifyPassword(String pwd) throws NoSuchAlgorithmException {
-        String encrPwd = encrypt(pwd);
-        return StringUtils.equals(this.pw, encrPwd);
-    }
+    this.authId = authId;
+    this.pw = encrypt(pw);
+  }
 
 
-    private String encrypt(String target) throws NoSuchAlgorithmException {
-        // todo SALT 를 적용 할까?
-        return CipherUtil.sha256(target);
-    }
+  public boolean verifyPassword(String pwd) throws NoSuchAlgorithmException {
+    String encrPwd = encrypt(pwd);
+    return StringUtils.equals(this.pw, encrPwd);
+  }
+
+
+  private String encrypt(String target) throws NoSuchAlgorithmException {
+    // todo SALT 를 적용 할까?
+    return CipherUtil.sha256(target);
+  }
 }

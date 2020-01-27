@@ -16,42 +16,43 @@ import java.time.Year;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-        name="house_fund",
-        uniqueConstraints={
-                @UniqueConstraint(
-                        columnNames={"year","month","inst_id"}
-                )
-        }
+    name = "house_fund",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            columnNames = {"year", "month", "inst_id"}
+        )
+    }
 )
 public class HouseFund {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
 
-    @Convert(converter = YearAttributeConverter.class)
-    @Column(name = "year")
-    private Year year;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
+  private Long id;
 
-    @Column(name = "month", columnDefinition = "smallint")
-    @Enumerated
-    private Month month;
+  @Convert(converter = YearAttributeConverter.class)
+  @Column(name = "year")
+  private Year year;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inst_id")
-    private Institution institution;
+  @Column(name = "month", columnDefinition = "smallint")
+  @Enumerated
+  private Month month;
 
-    @Column
-    private Long amount;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "inst_id")
+  private Institution institution;
+
+  @Column
+  private Long amount;
 
 
-    @Builder
-    public HouseFund(Integer year, Integer month, Institution institution, Long amount) {
-        Assert.notNull(institution, "institution가 Null 입니다.");
+  @Builder
+  public HouseFund(Integer year, Integer month, Institution institution, Long amount) {
+    Assert.notNull(institution, "institution가 Null 입니다.");
 
-        this.year = Year.of(year);
-        this.month = Month.of(month);
-        this.institution = institution;
-        this.amount = amount;
-    }
+    this.year = Year.of(year);
+    this.month = Month.of(month);
+    this.institution = institution;
+    this.amount = amount;
+  }
 }

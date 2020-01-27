@@ -14,27 +14,27 @@ import java.util.stream.Collectors;
 @Service
 public class InstitutionService {
 
-    private InstitutionRepository institutionRepository;
+  private InstitutionRepository institutionRepository;
 
-    @Autowired
-    public InstitutionService(InstitutionRepository institutionRepository) {
-        this.institutionRepository = institutionRepository;
-    }
+  @Autowired
+  public InstitutionService(InstitutionRepository institutionRepository) {
+    this.institutionRepository = institutionRepository;
+  }
 
-    @Transactional(readOnly = true)
-    public List<Institution> addInstitutions(Collection<Institution> institutionSet) {
-        return institutionRepository.saveAll(institutionSet);
-    }
+  @Transactional(readOnly = true)
+  public List<Institution> addInstitutions(Collection<Institution> institutionSet) {
+    return institutionRepository.saveAll(institutionSet);
+  }
 
-    @Transactional(readOnly = true)
-    public List<InstitutionResponse> getAllInstitution() {
-        return institutionRepository.findAll().stream()
-                .map(i -> new InstitutionResponse(i.getName()))
-                .collect(Collectors.toList());
-    }
+  @Transactional(readOnly = true)
+  public List<InstitutionResponse> getAllInstitution() {
+    return institutionRepository.findAll().stream()
+        .map(i -> new InstitutionResponse(i.getName()))
+        .collect(Collectors.toList());
+  }
 
-    @Transactional(readOnly = true)
-    public Institution getInstitutionByName(String name) {
-        return institutionRepository.findByName(name);
-    }
+  @Transactional(readOnly = true)
+  public Institution getInstitutionByName(String name) {
+    return institutionRepository.findByName(name);
+  }
 }

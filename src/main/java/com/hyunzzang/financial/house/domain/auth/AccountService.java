@@ -17,80 +17,80 @@ import java.util.Objects;
 @Service
 public class AccountService {
 
-    private AccountRepository accountRepository;
+  private AccountRepository accountRepository;
 
-    private TokenService tokenService;
+  private TokenService tokenService;
 
-    @Autowired
-    public AccountService(AccountRepository accountRepository,
-                          @Qualifier("jwtTokenService") TokenService tokenService) {
-        this.accountRepository = accountRepository;
-        this.tokenService = tokenService;
+  @Autowired
+  public AccountService(AccountRepository accountRepository,
+      @Qualifier("jwtTokenService") TokenService tokenService) {
+    this.accountRepository = accountRepository;
+    this.tokenService = tokenService;
+  }
+
+  @Transactional
+  public AccountResponse join(AccountRequest accountRequest) {
+    checkDuplicateAuthId(accountRequest.getAuthId());
+
+    Account account;
+    try {
+      account = Account.builder()
+          .authId(accountRequest.getAuthId())
+          .pw(accountRequest.getPw())
+          .build();
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
+      throw new AccountException(AccountErrorMessage.ACCOUNT_PW_ERROR);
     }
 
-    @Transactional
-    public AccountResponse join(AccountRequest accountRequest) {
-        checkDuplicateAuthId(accountRequest.getAuthId());
+    accountRepository.save(account);
 
-        Account account;
-        try {
-            account = Account.builder()
-                    .authId(accountRequest.getAuthId())
-                    .pw(accountRequest.getPw())
-                    .build();
-        } catch (NoSuchAlgorithmException e) {
-            log.error(e.getMessage());
-            throw new AccountException(AccountErrorMessage.ACCOUNT_PW_ERROR);
-        }
+    String token = tokenService.generate(account);
+    log.debug("token : {}", token);
 
-        accountRepository.save(account);
+    return new AccountResponse(account.getAuthId(), token);
+  }
 
-        String token = tokenService.generate(account);
-        log.debug("token : {}", token);
+  private void checkDuplicateAuthId(String authId) {
+    Account account = accountRepository.findByAuthId(authId);
+    if (!Objects.isNull(account)) {
+      throw new AccountException(AccountErrorMessage.ACCOUNT_DUPLICATION);
+    }
+  }
 
-        return new AccountResponse(account.getAuthId(), token);
+  public AccountResponse login(AccountRequest accountRequest) {
+    Account account = accountRepository.findByAuthId(accountRequest.getAuthId());
+    if (account == null) {
+      throw new AccountException(AccountErrorMessage.ACCOUNT_NONE);
+    }
+    try {
+      if (!account.verifyPassword(accountRequest.getPw())) {
+        throw new AccountException(AccountErrorMessage.ACCOUNT_PW_VALIDATION_FAILED);
+      }
+    } catch (NoSuchAlgorithmException e) {
+      throw new AccountException(AccountErrorMessage.ACCOUNT_PW_ERROR);
     }
 
-    private void checkDuplicateAuthId(String authId) {
-        Account account = accountRepository.findByAuthId(authId);
-        if (!Objects.isNull(account)) {
-            throw new AccountException(AccountErrorMessage.ACCOUNT_DUPLICATION);
-        }
+    String token = tokenService.generate(account);
+    log.debug("token : {}", token);
+
+    return new AccountResponse(account.getAuthId(), token);
+  }
+
+  public String refreshToken(String oldToken) {
+    try {
+      return tokenService.refresh(oldToken);
+    } catch (Exception ex) {
+      throw new AccountException(AccountErrorMessage.TOKEN_REFRESH_FAIL);
     }
+  }
 
-    public AccountResponse login(AccountRequest accountRequest) {
-        Account account = accountRepository.findByAuthId(accountRequest.getAuthId());
-        if (account == null) {
-            throw new AccountException(AccountErrorMessage.ACCOUNT_NONE);
-        }
-        try {
-            if (!account.verifyPassword(accountRequest.getPw())) {
-                throw new AccountException(AccountErrorMessage.ACCOUNT_PW_VALIDATION_FAILED);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            throw new AccountException(AccountErrorMessage.ACCOUNT_PW_ERROR);
-        }
-
-        String token = tokenService.generate(account);
-        log.debug("token : {}", token);
-
-        return new AccountResponse(account.getAuthId(), token);
+  public boolean verifyToken(String token) {
+    try {
+      return tokenService.checkToken(token);
+    } catch (Exception ex) {
+      throw new AccountException(AccountErrorMessage.TOKEN_VERIFICATION_FAIL);
     }
-
-    public String refreshToken(String oldToken) {
-        try {
-            return tokenService.refresh(oldToken);
-        } catch (Exception ex) {
-            throw new AccountException(AccountErrorMessage.TOKEN_REFRESH_FAIL);
-        }
-    }
-
-    public boolean verifyToken(String token) {
-        try {
-            return tokenService.checkToken(token);
-        } catch (Exception ex) {
-            throw new AccountException(AccountErrorMessage.TOKEN_VERIFICATION_FAIL);
-        }
-    }
+  }
 
 }

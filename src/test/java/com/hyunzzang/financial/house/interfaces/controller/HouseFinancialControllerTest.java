@@ -43,108 +43,113 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class HouseFinancialControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    @Autowired
-    private TokenService JwtTokenService;
+  @Autowired
+  private TokenService JwtTokenService;
 
-    @MockBean
-    private HouseFinancialCsvService houseFinancialCsvService;
+  @MockBean
+  private HouseFinancialCsvService houseFinancialCsvService;
 
-    @MockBean
-    private HouseFundService houseFundService;
+  @MockBean
+  private HouseFundService houseFundService;
 
-    @MockBean
-    private HouseFinancialSearchService houseFinancialSearchService;
+  @MockBean
+  private HouseFinancialSearchService houseFinancialSearchService;
 
 
-    @Test
-    @DisplayName("데이터 파일에서 각 레코드를 데이터베이스에 저장하는 API")
-    public void saveHomeFinancialFromCsv_mock_테스트() throws Exception {
-        HouseFinancialCsvResult houseFinancialCsvResult = new HouseFinancialCsvResult(5, 100);
+  @Test
+  @DisplayName("데이터 파일에서 각 레코드를 데이터베이스에 저장하는 API")
+  public void saveHomeFinancialFromCsv_mock_테스트() throws Exception {
+    HouseFinancialCsvResult houseFinancialCsvResult = new HouseFinancialCsvResult(5, 100);
 //        MockMultipartFile file = new MockMultipartFile("data", "data.csv", "text/plain", "2005,1,1019,846,82,95,30,157,57,80,99,,,,,,,".getBytes());
 
-        given(houseFinancialCsvService.addHouseFinancial(any(MultipartFile.class))).willReturn(houseFinancialCsvResult);
+    given(houseFinancialCsvService.addHouseFinancial(any(MultipartFile.class)))
+        .willReturn(houseFinancialCsvResult);
 
-        mvc.perform(MockMvcRequestBuilders.multipart("/api/fund/csv")
-                .file("file", "2005,1,1019,846,82,95,30,157,57,80,99,,,,,,,".getBytes())
-                .characterEncoding("UTF-8")
-                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
-                .andExpect(status().is(200))
-                .andExpect(jsonPath("$.addedInstitutionCount").value(5))
-                .andExpect(jsonPath("$.addedHouseFundCount").value(100));
+    mvc.perform(MockMvcRequestBuilders.multipart("/api/fund/csv")
+        .file("file", "2005,1,1019,846,82,95,30,157,57,80,99,,,,,,,".getBytes())
+        .characterEncoding("UTF-8")
+        .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
+        .andExpect(status().is(200))
+        .andExpect(jsonPath("$.addedInstitutionCount").value(5))
+        .andExpect(jsonPath("$.addedHouseFundCount").value(100));
 
-    }
+  }
 
 
-    @Test
-    @DisplayName("년도별 각 금융기관의 지원금액 합계를 출력하는 API")
-    public void getTotalYear_mock_테스트() throws Exception {
-        List<YearSumAmountResult> yearSumAmountResultList = new ArrayList<>();
-        yearSumAmountResultList.add(new YearSumAmountResult(Year.of(2017), new Institution(InstitutionCode.KB_BANK), 1200L));
-        List<YearTotalAmountResponse> yearTotalAmountResponseList = new ArrayList<>();
-        yearTotalAmountResponseList.add(new YearTotalAmountResponse(Year.of(2017), yearSumAmountResultList));
+  @Test
+  @DisplayName("년도별 각 금융기관의 지원금액 합계를 출력하는 API")
+  public void getTotalYear_mock_테스트() throws Exception {
+    List<YearSumAmountResult> yearSumAmountResultList = new ArrayList<>();
+    yearSumAmountResultList.add(
+        new YearSumAmountResult(Year.of(2017), new Institution(InstitutionCode.KB_BANK), 1200L));
+    List<YearTotalAmountResponse> yearTotalAmountResponseList = new ArrayList<>();
+    yearTotalAmountResponseList
+        .add(new YearTotalAmountResponse(Year.of(2017), yearSumAmountResultList));
 
-        given(houseFundService.getAllYearSumAmount()).willReturn(yearTotalAmountResponseList);
+    given(houseFundService.getAllYearSumAmount()).willReturn(yearTotalAmountResponseList);
 
-        mvc.perform(get("/api/fund/totalYear")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].year").value(2017))
-                .andExpect(jsonPath("$[0].total_amount").value(1200L))
-                .andExpect(jsonPath("$[0].detail_amount.국민은행").value(1200L));
-    }
+    mvc.perform(get("/api/fund/totalYear")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)))
+        .andExpect(jsonPath("$[0].year").value(2017))
+        .andExpect(jsonPath("$[0].total_amount").value(1200L))
+        .andExpect(jsonPath("$[0].detail_amount.국민은행").value(1200L));
+  }
 
-    @Test
-    @DisplayName("각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API")
-    public void getMaxBankYear_mock_테스트() throws Exception {
-        given(houseFundService.getYearMaxAmountInstitution())
-                .willReturn(new YearMaxInstitutionResponse(2015, "신한은행"));
+  @Test
+  @DisplayName("각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API")
+  public void getMaxBankYear_mock_테스트() throws Exception {
+    given(houseFundService.getYearMaxAmountInstitution())
+        .willReturn(new YearMaxInstitutionResponse(2015, "신한은행"));
 
-        mvc.perform(get("/api/fund/maxBank")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.year").value(2015))
-                .andExpect(jsonPath("$.bank").value("신한은행"));
-    }
+    mvc.perform(get("/api/fund/maxBank")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.year").value(2015))
+        .andExpect(jsonPath("$.bank").value("신한은행"));
+  }
 
-    @Test
-    @DisplayName("외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력하는 API")
-    public void getAverageForBank_mock_테스트() throws Exception {
-        String bankName = "외환은행";
-        List<YearAmountResult> yearAmountResultList = new ArrayList<>();
-        yearAmountResultList.add(new YearAmountResult(Year.of(2014), 1000D));
-        yearAmountResultList.add(new YearAmountResult(Year.of(2015), 2000D));
-        BankAverageResponse bankAverageResponse = new BankAverageResponse(bankName, yearAmountResultList);
+  @Test
+  @DisplayName("외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력하는 API")
+  public void getAverageForBank_mock_테스트() throws Exception {
+    String bankName = "외환은행";
+    List<YearAmountResult> yearAmountResultList = new ArrayList<>();
+    yearAmountResultList.add(new YearAmountResult(Year.of(2014), 1000D));
+    yearAmountResultList.add(new YearAmountResult(Year.of(2015), 2000D));
+    BankAverageResponse bankAverageResponse = new BankAverageResponse(bankName,
+        yearAmountResultList);
 
-        given(houseFinancialSearchService.getMaxMinAvgAmountForBank(any(String.class))).willReturn(bankAverageResponse);
+    given(houseFinancialSearchService.getMaxMinAvgAmountForBank(any(String.class)))
+        .willReturn(bankAverageResponse);
 
-        mvc.perform(get("/api/fund/average/외한은행")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.bank").value(bankName))
-                .andExpect(jsonPath("$.support_amount[0].year").value(2014))
-                .andExpect(jsonPath("$.support_amount[0].amount").value(1000D))
-                .andExpect(jsonPath("$.support_amount[1].year").value(2015))
-                .andExpect(jsonPath("$.support_amount[1].amount").value(2000D));
-    }
+    mvc.perform(get("/api/fund/average/외한은행")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(AuthConstant.HEADER_KEY_AUTHORIZATION, getToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.bank").value(bankName))
+        .andExpect(jsonPath("$.support_amount[0].year").value(2014))
+        .andExpect(jsonPath("$.support_amount[0].amount").value(1000D))
+        .andExpect(jsonPath("$.support_amount[1].year").value(2015))
+        .andExpect(jsonPath("$.support_amount[1].amount").value(2000D));
+  }
 
-    @Test
-    public void getEstimateForBank_mock_테스트() {
+  @Test
+  public void getEstimateForBank_mock_테스트() {
 
-    }
+  }
 
-    private String getToken() throws NoSuchAlgorithmException {
-        return JwtTokenService.generate(
-                Account.builder()
-                        .authId("testId")
-                        .pw("123456")
-                        .build());
-    }
+  private String getToken() throws NoSuchAlgorithmException {
+    return JwtTokenService.generate(
+        Account.builder()
+            .authId("testId")
+            .pw("123456")
+            .build());
+  }
 
 }

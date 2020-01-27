@@ -5,12 +5,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HouseFundConditionSearchService {
-    private HouseFundRepository houseFundRepository;
 
-    @Autowired
-    public HouseFundConditionSearchService(HouseFundRepository houseFundRepository) {
-        this.houseFundRepository = houseFundRepository;
-    }
+  private HouseFundRepository houseFundRepository;
+
+  @Autowired
+  public HouseFundConditionSearchService(HouseFundRepository houseFundRepository) {
+    this.houseFundRepository = houseFundRepository;
+  }
 
 
 }

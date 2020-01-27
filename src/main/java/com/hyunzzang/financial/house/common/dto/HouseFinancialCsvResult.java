@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HouseFinancialCsvResult {
-    private int addedInstitutionCount;
-    private int addedHouseFundCount;
+
+  private int addedInstitutionCount;
+  private int addedHouseFundCount;
 }

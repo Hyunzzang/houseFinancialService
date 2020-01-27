@@ -11,23 +11,24 @@ import java.util.Map;
 
 @Getter
 public class YearTotalAmountResponse {
-    private int year;
 
-    @JsonProperty("total_amount")
-    private long totalAmount;
+  private int year;
 
-    @JsonProperty("detail_amount")
-    private Map<String, Long> detailAmount = new HashMap<>();
+  @JsonProperty("total_amount")
+  private long totalAmount;
+
+  @JsonProperty("detail_amount")
+  private Map<String, Long> detailAmount = new HashMap<>();
 
 
-    public YearTotalAmountResponse(Year year, List<YearSumAmountResult> yearSumAmountResultList) {
-        this.year = year.getValue();
-        for (YearSumAmountResult val: yearSumAmountResultList) {
-            if (year.getValue() != val.getYear().getValue()) {
-                // todo 예외 처리를 하자.
-            }
-            totalAmount += val.getSumAmount();
-            detailAmount.put(val.getInstitution().getName(), val.getSumAmount());
-        }
+  public YearTotalAmountResponse(Year year, List<YearSumAmountResult> yearSumAmountResultList) {
+    this.year = year.getValue();
+    for (YearSumAmountResult val : yearSumAmountResultList) {
+      if (year.getValue() != val.getYear().getValue()) {
+        // todo 예외 처리를 하자.
+      }
+      totalAmount += val.getSumAmount();
+      detailAmount.put(val.getInstitution().getName(), val.getSumAmount());
     }
+  }
 }

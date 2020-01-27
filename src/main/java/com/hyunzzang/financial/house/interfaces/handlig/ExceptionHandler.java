@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandler {
 
-    // todo response 에러 포맷을 정의 하자.
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = HouseFinancialException.class)
-    public ResponseEntity fundHandelException(HouseFinancialException e) {
-        return ResponseEntity
-                .status(HttpStatus.EXPECTATION_FAILED)
-                .body(e.getHouseFinancialErrorMessage().getMessage());
-    }
+  // todo response 에러 포맷을 정의 하자.
+  @ResponseBody
+  @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
+  @org.springframework.web.bind.annotation.ExceptionHandler(value = HouseFinancialException.class)
+  public ResponseEntity fundHandelException(HouseFinancialException e) {
+    return ResponseEntity
+        .status(HttpStatus.EXPECTATION_FAILED)
+        .body(e.getHouseFinancialErrorMessage().getMessage());
+  }
 
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = AccountException.class)
-    public ResponseEntity authHandelException(AccountException e) {
-        return ResponseEntity
-                .status(HttpStatus.EXPECTATION_FAILED)
-                .body(e.getAccountErrorMessage().getMessage());
-    }
+  @ResponseBody
+  @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
+  @org.springframework.web.bind.annotation.ExceptionHandler(value = AccountException.class)
+  public ResponseEntity authHandelException(AccountException e) {
+    return ResponseEntity
+        .status(HttpStatus.EXPECTATION_FAILED)
+        .body(e.getAccountErrorMessage().getMessage());
+  }
 }

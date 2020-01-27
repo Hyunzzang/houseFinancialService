@@ -12,20 +12,20 @@ import static org.junit.Assert.*;
 @DataJpaTest
 public class InstitutionRepositoryTest {
 
-    @Autowired
-    private InstitutionRepository institutionRepository;
+  @Autowired
+  private InstitutionRepository institutionRepository;
 
 
-    @Test
-    public void whenFindByName_thenReturnInstitution() {
-        Institution institution = Institution.ByInstitutionTypeBuilder()
-                .institutionCode(InstitutionCode.HANA_BANK)
-                .build();
+  @Test
+  public void whenFindByName_thenReturnInstitution() {
+    Institution institution = Institution.ByInstitutionTypeBuilder()
+        .institutionCode(InstitutionCode.HANA_BANK)
+        .build();
 
-        institutionRepository.save(institution);
+    institutionRepository.save(institution);
 
-        Institution found = institutionRepository.findByName(institution.getName());
-        assertNotNull(found);
-        assertEquals(found.getName(), institution.getName());
-    }
+    Institution found = institutionRepository.findByName(institution.getName());
+    assertNotNull(found);
+    assertEquals(found.getName(), institution.getName());
+  }
 }

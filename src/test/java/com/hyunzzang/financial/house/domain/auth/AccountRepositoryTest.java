@@ -15,22 +15,22 @@ import static org.junit.Assert.assertNotNull;
 @DataJpaTest
 public class AccountRepositoryTest {
 
-    @Autowired
-    private AccountRepository accountRepository;
+  @Autowired
+  private AccountRepository accountRepository;
 
 
-    @Test
-    public void findByAuthId_thenReturnAccount() throws NoSuchAlgorithmException {
-        String authId = "testId";
-        Account account = Account.builder()
-                .authId(authId)
-                .pw("123456")
-                .build();
-        accountRepository.save(account);
+  @Test
+  public void findByAuthId_thenReturnAccount() throws NoSuchAlgorithmException {
+    String authId = "testId";
+    Account account = Account.builder()
+        .authId(authId)
+        .pw("123456")
+        .build();
+    accountRepository.save(account);
 
-        Account resAccount = accountRepository.findByAuthId(authId);
-        assertNotNull(resAccount);
-        assertEquals(account.getAuthId(), resAccount.getAuthId());
-        assertEquals(account.getPw(), resAccount.getPw());
-    }
+    Account resAccount = accountRepository.findByAuthId(authId);
+    assertNotNull(resAccount);
+    assertEquals(account.getAuthId(), resAccount.getAuthId());
+    assertEquals(account.getPw(), resAccount.getPw());
+  }
 }

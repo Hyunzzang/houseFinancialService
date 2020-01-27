@@ -8,11 +8,12 @@ import java.time.Year;
 @Getter
 @NoArgsConstructor
 public class YearAmountResult {
-    private int year;
-    private long amount;
 
-    public YearAmountResult(Year year, Double amount) {
-        this.year = year.getValue();
-        this.amount = amount.longValue();
-    }
+  private int year;
+  private long amount;
+
+  public YearAmountResult(Year year, Double amount) {
+    this.year = year.getValue();
+    this.amount = amount.longValue();
+  }
 }

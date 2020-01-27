@@ -12,8 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BankAverageResponse {
-    private String bank;
 
-    @JsonProperty("support_amount")
-    private List<YearAmountResult> yearAmountResultList;
+  private String bank;
+
+  @JsonProperty("support_amount")
+  private List<YearAmountResult> yearAmountResultList;
 }

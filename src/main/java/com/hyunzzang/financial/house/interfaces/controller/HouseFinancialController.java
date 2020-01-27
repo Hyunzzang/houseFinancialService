@@ -17,67 +17,71 @@ import java.util.List;
 @RequestMapping(value = "/api/fund")
 public class HouseFinancialController {
 
-    private HouseFinancialCsvService houseFinancialCsvService;
-    private HouseFundService houseFundService;
-    private HouseFinancialSearchService houseFinancialSearchService;
+  private HouseFinancialCsvService houseFinancialCsvService;
+  private HouseFundService houseFundService;
+  private HouseFinancialSearchService houseFinancialSearchService;
 
-    @Autowired
-    public HouseFinancialController(HouseFinancialCsvService houseFinancialCsvService,
-                                    HouseFundService houseFundService,
-                                    HouseFinancialSearchService houseFinancialSearchService) {
-        this.houseFinancialCsvService = houseFinancialCsvService;
-        this.houseFundService = houseFundService;
-        this.houseFinancialSearchService = houseFinancialSearchService;
-    }
+  @Autowired
+  public HouseFinancialController(HouseFinancialCsvService houseFinancialCsvService,
+      HouseFundService houseFundService,
+      HouseFinancialSearchService houseFinancialSearchService) {
+    this.houseFinancialCsvService = houseFinancialCsvService;
+    this.houseFundService = houseFundService;
+    this.houseFinancialSearchService = houseFinancialSearchService;
+  }
 
-    /**
-     * 데이터 파일에서 각 레코드를 데이터베이스에 저장하는 API
-     * @param file
-     * @return
-     */
-    @PostMapping("/csv")
-    public ResponseEntity<HouseFinancialCsvResult> saveHomeFinancialFromCsv(MultipartFile file) {
-        log.info(":: saveHomeFinancialFromCsv ::");
+  /**
+   * 데이터 파일에서 각 레코드를 데이터베이스에 저장하는 API
+   *
+   * @param file
+   * @return
+   */
+  @PostMapping("/csv")
+  public ResponseEntity<HouseFinancialCsvResult> saveHomeFinancialFromCsv(MultipartFile file) {
+    log.info(":: saveHomeFinancialFromCsv ::");
 
-        // todo 중복된 데이터 추가시 예외 처리를 하자.
-        return ResponseEntity.ok(houseFinancialCsvService.addHouseFinancial(file));
-    }
+    // todo 중복된 데이터 추가시 예외 처리를 하자.
+    return ResponseEntity.ok(houseFinancialCsvService.addHouseFinancial(file));
+  }
 
-    /**
-     * 년도별 각 금융기관의 지원금액 합계를 출력하는 API
-     * @return
-     */
-    @GetMapping("/totalYear")
-    public ResponseEntity<List<YearTotalAmountResponse>> getTotalYear() {
-        log.info(":: getTotalYear ::");
+  /**
+   * 년도별 각 금융기관의 지원금액 합계를 출력하는 API
+   *
+   * @return
+   */
+  @GetMapping("/totalYear")
+  public ResponseEntity<List<YearTotalAmountResponse>> getTotalYear() {
+    log.info(":: getTotalYear ::");
 
-        return ResponseEntity.ok(houseFundService.getAllYearSumAmount());
-    }
+    return ResponseEntity.ok(houseFundService.getAllYearSumAmount());
+  }
 
-    /**
-     * 각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API
-     * @return
-     */
-    @GetMapping("/maxBank")
-    public ResponseEntity<YearMaxInstitutionResponse> getMaxBankYear() {
-        log.info(":: getMaxAdmountYear ::");
+  /**
+   * 각년도별 각기관의 전체지원금액중에서 가장 큰금액의 기관명을 출력하는 API
+   *
+   * @return
+   */
+  @GetMapping("/maxBank")
+  public ResponseEntity<YearMaxInstitutionResponse> getMaxBankYear() {
+    log.info(":: getMaxAdmountYear ::");
 
-        return ResponseEntity.ok(houseFundService.getYearMaxAmountInstitution());
-    }
+    return ResponseEntity.ok(houseFundService.getYearMaxAmountInstitution());
+  }
 
-    /**
-     * 외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력하는 API
-     *
-     * @param bankName
-     * @return
-     */
-    @GetMapping("/average/{bankName}")
-    public ResponseEntity<BankAverageResponse> getAverageForBank(@PathVariable("bankName") String bankName) {
-        log.info(":: getAverageForBank ::");
-        log.debug("bankName : {}", bankName);
+  /**
+   * 외환은행의 지원금액 평균 중에서 가장 작은 금액과 큰 금액을 출력하는 API
+   *
+   * @param bankName
+   * @return
+   */
+  @GetMapping("/average/{bankName}")
+  public ResponseEntity<BankAverageResponse> getAverageForBank(
+      @PathVariable("bankName") String bankName) {
+    log.info(":: getAverageForBank ::");
+    log.debug("bankName : {}", bankName);
 
-        return ResponseEntity.ok(houseFinancialSearchService.getMaxMinAvgAmountForBank(bankName));
-    }
+    return ResponseEntity.ok(houseFinancialSearchService.getMaxMinAvgAmountForBank(bankName));
+  }
 
 //    @GetMapping("/estimate/{bankName}/{month}")
 //    public ResponseEntity<EstimateAmountResponse> getEstimateForBank(

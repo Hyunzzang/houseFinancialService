@@ -12,42 +12,43 @@ import java.util.Date;
 @Slf4j
 @Service
 public class JwtTokenService implements TokenService {
-    private static final String SECRET_KEY = "secretkey";
-    private static final String CLAIM_KEY_ID = "id";
 
-    @Override
-    public String generate(Account account) {
-        return generateJwt(account.getAuthId());
-    }
+  private static final String SECRET_KEY = "secretkey";
+  private static final String CLAIM_KEY_ID = "id";
 
-    @Override
-    public String refresh(String token) {
-        final Claims claims = parserJwt(token);
-        String authId = (String) claims.get(CLAIM_KEY_ID);
-        return generateJwt(authId);
-    }
+  @Override
+  public String generate(Account account) {
+    return generateJwt(account.getAuthId());
+  }
 
-    @Override
-    public boolean checkToken(String token) {
-        final Claims claims = parserJwt(token);
-        String authId = (String) claims.get(CLAIM_KEY_ID);
-        return StringUtils.isNotEmpty(authId);
-    }
+  @Override
+  public String refresh(String token) {
+    final Claims claims = parserJwt(token);
+    String authId = (String) claims.get(CLAIM_KEY_ID);
+    return generateJwt(authId);
+  }
 
-    private String generateJwt(String authId) {
-        // todo 만료 시간을 설정해야 하지 않을까
-        return Jwts.builder()
-                .setSubject(authId)
-                .claim(CLAIM_KEY_ID, "user")
-                .setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-    }
+  @Override
+  public boolean checkToken(String token) {
+    final Claims claims = parserJwt(token);
+    String authId = (String) claims.get(CLAIM_KEY_ID);
+    return StringUtils.isNotEmpty(authId);
+  }
 
-    private Claims parserJwt(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-    }
+  private String generateJwt(String authId) {
+    // todo 만료 시간을 설정해야 하지 않을까
+    return Jwts.builder()
+        .setSubject(authId)
+        .claim(CLAIM_KEY_ID, "user")
+        .setIssuedAt(new Date())
+        .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+        .compact();
+  }
+
+  private Claims parserJwt(String token) {
+    return Jwts.parser()
+        .setSigningKey(SECRET_KEY)
+        .parseClaimsJws(token)
+        .getBody();
+  }
 }

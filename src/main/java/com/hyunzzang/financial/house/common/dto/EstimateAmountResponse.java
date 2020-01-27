@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class EstimateAmountResponse {
-    private String bank;
-    private int year;
-    private int month;
-    private long amount;
+
+  private String bank;
+  private int year;
+  private int month;
+  private long amount;
 }

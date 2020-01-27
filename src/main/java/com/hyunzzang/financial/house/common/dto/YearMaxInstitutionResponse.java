@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class YearMaxInstitutionResponse {
-    private int year;
-    private String bank;
 
-    public YearMaxInstitutionResponse(YearSumAmountResult yearSumAmountResult) {
-        this.year = yearSumAmountResult.getYear().getValue();
-        this.bank = yearSumAmountResult.getInstitution().getName();
-    }
+  private int year;
+  private String bank;
+
+  public YearMaxInstitutionResponse(YearSumAmountResult yearSumAmountResult) {
+    this.year = yearSumAmountResult.getYear().getValue();
+    this.bank = yearSumAmountResult.getInstitution().getName();
+  }
 }
